@@ -1,5 +1,6 @@
 from PySide2 import QtGui, QtCore, QtWidgets
-from views import Node, View
+from views import Node, View, Renderer
+from script_parser import parse_lines
 import sys
 import os
 import argparse
@@ -12,6 +13,7 @@ def main():
     if not os.path.isdir(args.dir):
         print("Expected a directory for editor")
         return 1
+    
 
     app = QtWidgets.QApplication([])
     splitter = QtWidgets.QSplitter()
@@ -26,11 +28,16 @@ def main():
 
     # scene
     scene = QtWidgets.QGraphicsScene()
-    scene.addItem(Node("Node A", QtGui.QColor(255, 0, 0)))
     view = View(scene, splitter)
 
     splitter.setWindowTitle("Nodal editor")
     splitter.show()
+
+    renderer = Renderer(scene)
+    with open("story/script.rpy") as fp:
+        labels = parse_lines(fp.readlines())
+    for label in labels:
+        label.accept(renderer)
 
     return app.exec_()
 
