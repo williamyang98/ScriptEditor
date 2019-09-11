@@ -1,7 +1,6 @@
 from abc import abstractmethod, ABC
-from .Visitor import Visitor
 
 class Visitable(ABC):
     @abstractmethod
-    def accept(self, visitor: Visitor):
+    def accept(self, visitor):
         raise NotImplementedError()

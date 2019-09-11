@@ -12,26 +12,25 @@ class ConditionBlock(Visitable):
     def accept(self, visitor):
         return visitor.visit_condition_block(self)
 
-class IfCondition:
+class IfCondition(Visitable):
     def __init__(self, script):
         self.script = script
         self.context = None
-
-    def __str__(self):
-        return "If {0}".format(self.script)
     
-class ElifCondition:
+    def accept(self, visitor):
+        return visitor.visit_if_condition(self)
+    
+class ElifCondition(Visitable):
     def __init__(self, script):
         self.script = script
         self.context = None
+    
+    def accept(self, visitor):
+        return visitor.visit_elif_condition(self)
 
-    def __str__(self):
-        return "Elif {0}".format(self.script)
-
-class ElseCondition:
+class ElseCondition(Visitable):
     def __init__(self):
         self.context = None
-
-    def __str__(self):
-        return "Else"
-
+    
+    def accept(self, visitor):
+        return visitor.visit_else_condition(self)

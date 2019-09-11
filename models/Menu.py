@@ -11,7 +11,10 @@ class Menu(Visitable):
     def accept(self, visitor):
         return visitor.visit_menu(self)
 
-class Choice:
+class Choice(Visitable):
     def __init__(self, description):
         self.description = description
         self.context = None
+    
+    def accept(self, visitor):
+        return visitor.visit_choice(self)

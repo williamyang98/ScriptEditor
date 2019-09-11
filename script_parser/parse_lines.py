@@ -19,4 +19,4 @@ def parse_lines(lines):
             raise FileParseException(indent, line_number, line, str(ex))
     
     parser.close()
-    pass
+    return parser.model
