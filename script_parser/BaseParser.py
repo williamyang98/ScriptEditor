@@ -1,0 +1,47 @@
+from .Parser import Parser
+from .ContextParser import ContextParser
+from .ParseException import ParseException
+from models import Label
+import re
+
+regex_label = re.compile(r"label\s+(?P<label>[a-z0-9_\-]+)\s*:")
+
+class BaseParser(Parser):
+    def __init__(self):
+        self._models = []
+        self.label = None
+        self.child = None
+
+    def parse_line(self, indent, line_number, line):
+        if self.child:
+            self.child.parse_line(indent, line_number, line)
+            # if child still active
+            if self.child:
+                return
+
+        if indent != 0:
+            raise ParseException("Expected 0 indent")
+        
+        match = regex_label.match(line)
+        if match:
+            label = match["label"]
+            self.child = ContextParser(self)
+            self.label = Label(label)
+    
+    def close(self):
+        if self.child:
+            self.child.close()
+    
+    def on_child_close(self):
+        self._models.append(self.label)
+        context = self.child.model
+        self.label.context = context
+        context.parent = self.label
+        self.child = None
+        self.label = None
+    
+    @property
+    def model(self):
+        return self._models
+        
+
