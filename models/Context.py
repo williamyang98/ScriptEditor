@@ -1,10 +1,15 @@
-class Context:
+from .Visitable import Visitable
+
+class Context(Visitable):
     def __init__(self):
         self.parent = None
         self.contents = []
     
     def add_content(self, content):
         self.contents.append(content)
+
+    def accept(self, visitor):
+        return visitor.visit_context(self)
 
 class Jump:
     def __init__(self, label):

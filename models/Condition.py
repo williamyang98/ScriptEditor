@@ -1,4 +1,6 @@
-class ConditionBlock:
+from .Visitable import Visitable
+
+class ConditionBlock(Visitable):
     def __init__(self):
         self.if_condition = None
         self.elif_conditions = []
@@ -6,6 +8,9 @@ class ConditionBlock:
     
     def add_elif_condition(self, condition):
         self.elif_conditions.append(condition)
+    
+    def accept(self, visitor):
+        return visitor.visit_condition_block(self)
 
 class IfCondition:
     def __init__(self, script):

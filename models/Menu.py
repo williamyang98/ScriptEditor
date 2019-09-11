@@ -1,10 +1,15 @@
-class Menu:
+from .Visitable import Visitable
+
+class Menu(Visitable):
     def __init__(self):
         self.description = None
         self.choices = []
 
     def add_choice(self, choice):
         self.choices.append(choice)
+    
+    def accept(self, visitor):
+        return visitor.visit_menu(self)
 
 class Choice:
     def __init__(self, description):
