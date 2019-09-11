@@ -34,10 +34,14 @@ class View(QtWidgets.QGraphicsView):
         if event.button() == QtCore.Qt.MidButton:
             self.setPan(True)
             self._lastMousePosition = event.pos()
+        
+        return QtWidgets.QGraphicsView.mousePressEvent(self, event)
     
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.MidButton:
             self.setPan(False)
+        
+        return QtWidgets.QGraphicsView.mouseReleaseEvent(self, event)
     
     def mouseMoveEvent(self, event):
         if self.isPan:
@@ -46,12 +50,13 @@ class View(QtWidgets.QGraphicsView):
             self.translate(delta.x(), delta.y())
             self._lastMousePosition = event.pos()
 
-        
-    
+        return QtWidgets.QGraphicsView.mouseMoveEvent(self, event)
+
     def wheelEvent(self, event):
         delta = event.angleDelta().y() / 8
         zoom = pow(1.25, delta / 100)
         self.zoom(zoom)
+
     
 
     
