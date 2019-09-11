@@ -7,8 +7,10 @@ import re
 regex_label = re.compile(r"label\s+(?P<label>[a-z0-9_\-]+)\s*:")
 
 class BaseParser(Parser):
+    """Gets all labels and their contexts from lines
+    """
     def __init__(self):
-        self._models = []
+        self._labels = []
         self.label = None
         self.child = None
 
@@ -19,8 +21,9 @@ class BaseParser(Parser):
             if self.child:
                 return
 
+        # ignore if not aligned to 0
         if indent != 0:
-            raise ParseException("Expected 0 indent")
+            return
         
         match = regex_label.match(line)
         if match:
@@ -33,7 +36,7 @@ class BaseParser(Parser):
             self.child.close()
     
     def on_child_close(self):
-        self._models.append(self.label)
+        self._labels.append(self.label)
         context = self.child.model
         self.label.context = context
         context.parent = self.label
@@ -42,6 +45,6 @@ class BaseParser(Parser):
     
     @property
     def model(self):
-        return self._models
+        return self._labels
         
 

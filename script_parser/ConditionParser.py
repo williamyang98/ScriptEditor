@@ -36,6 +36,22 @@ class ConditionParser(Parser):
         if not self.condition_parser(indent, line_number, line):
             self.close()
             return
+    
+    def close(self):
+        if self.child:
+            self.child.close()
+        self.parent.on_child_close()
+        
+    def on_child_close(self):
+        context = self.child.model
+        self.condition.context = context
+        context.parent = self.condition
+        self.condition = None
+        self.child = None
+
+    @property
+    def model(self):
+        return self._model
 
     def parse_if(self, indent, line_number, line):
         from .ContextParser import ContextParser
@@ -77,19 +93,3 @@ class ConditionParser(Parser):
             self.condition_parser = None
             return True
         return False
-    
-    def close(self):
-        if self.child:
-            self.child.close()
-        self.parent.on_child_close()
-        
-    def on_child_close(self):
-        context = self.child.model
-        self.condition.context = context
-        context.parent = self.condition
-        self.condition = None
-        self.child = None
-
-    @property
-    def model(self):
-        return self._model
