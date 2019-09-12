@@ -20,7 +20,7 @@ class JSONSerialiser(Visitor):
         return data
     
     def visit_elif_condition(self, con):
-        return self._visit_if_condition(con)
+        return self.visit_if_condition(con)
     
     def visit_else_condition(self, con):
         data = {}
