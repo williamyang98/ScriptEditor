@@ -1,5 +1,6 @@
 from models import Visitor
 from .Node import Node
+from .Connection import Connection
 
 class Renderer(Visitor):
     def __init__(self, scene):
@@ -7,36 +8,54 @@ class Renderer(Visitor):
     
     # conditions
     def visit_condition_block(self, block):
-        self.scene.addItem(Node("condition_block"))
+        node = Node("condition_block")
+        children = []
+        self.scene.addItem(node)
         if block.if_condition:
-            block.if_condition.accept(self)
+            children.append(block.if_condition.accept(self))
         for elif_condition in block.elif_conditions:
-            elif_condition.accept(self)
+            children.append(elif_condition.accept(self))
         if block.else_condition:
-            block.else_condition.accept(self)
+            children.append(block.else_condition.accept(self))
+        for child in children:
+            if child:
+                connection = Connection(node, child)
+                self.scene.addItem(connection)
+        return node
 
     def visit_if_condition(self, con):
-        con.context.accept(self)
+        return con.context.accept(self)
 
     def visit_elif_condition(self, con):
-        con.context.accept(self)
+        return con.context.accept(self)
 
     def visit_else_condition(self, con):
-        con.context.accept(self)
+        return con.context.accept(self)
 
     # context
     def visit_context(self, context):
-        self.scene.addItem(Node("context"))
+        node = Node("context")
+        self.scene.addItem(node)
         for content in context.contents:
             if isinstance(content, str):
                 continue
 
-            content.accept(self)
+            child = content.accept(self)
+            if child:
+                connection = Connection(node, child)
+                self.scene.addItem(connection)
+        
+        return node
 
     # renpy directives
     def visit_label(self, label):
-        self.scene.addItem(Node("label: "+label.name))
-        label.context.accept(self)
+        node = Node("label: "+label.name)
+        self.scene.addItem(node)
+        context = label.context.accept(self)
+        if context:
+            connection = Connection(node, context)
+            self.scene.addItem(connection)
+        return node
         
 
     def visit_jump(self, jump):
@@ -53,9 +72,14 @@ class Renderer(Visitor):
 
     # menu
     def visit_menu(self, menu):
-        self.scene.addItem(Node("menu: "+menu.description))
+        node = Node("menu: "+menu.description)
+        self.scene.addItem(node)
         for choice in menu.choices:
-            choice.accept(self)
+            child = choice.accept(self)
+            if child:
+                connection = Connection(node, child)
+                self.scene.addItem(connection)
+        return node
 
     def visit_choice(self, choice):
-        choice.context.accept(self)
+        return choice.context.accept(self)

@@ -20,6 +20,3 @@ class Node(QtWidgets.QGraphicsItem):
         painter.drawText(self.boundingRect(), self.title)
         painter.drawRect(self.boundingRect())
         painter.fillRect(self.boundingRect(), self.colour)
-
-    def mousePressEvent(self, event):
-        print("pressed node")
