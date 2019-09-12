@@ -1,16 +1,14 @@
 from PySide2 import QtGui, QtCore, QtWidgets
 
-from OrganiserControls import OrganiserControls
-
-from views import View, Renderer, Organiser, TreeOrganiser
-from models import JSONSerialiser
-from script_parser import parse_lines
+from editor import Manager, View
+from editor.organiser import TreeOrganiser 
 
 
 import json
 import sys
 import os
 import argparse
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -42,25 +40,17 @@ def main():
 
     # organiser = Organiser()
     organiser = TreeOrganiser()
-    renderer = Renderer(scene, organiser)
-    with open("story/Day 1/4 engineering.rpy") as fp:
-        labels = parse_lines(fp.readlines())
-    
-    serialiser = JSONSerialiser()
-    data = [label.accept(serialiser) for label in labels]
-
-    with open("parsed.json", "w") as fp:
-        json.dump(data, fp, indent=2)
-
-    for label in labels:
-        label.accept(renderer)
-
-    controls = OrganiserControls(None, organiser)
-    
-    organiser.organise()
+    manager = Manager(organiser, scene)
 
     splitter.show()
-    controls.show()
+
+    def dummy(_):
+        index = tree_view.currentIndex()
+        filepath = model.filePath(index)
+        manager.loadFromFile(filepath)
+
+    tree_view.clicked.connect(dummy)
+    # controls.show()
 
     return app.exec_()
 
