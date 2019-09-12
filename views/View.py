@@ -21,6 +21,7 @@ class View(QtWidgets.QGraphicsView):
     
     def zoom(self, zoom, limits=True):
         self._scale = self._scale * zoom
+        self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
         self.scale(zoom, zoom)
 
     def setPan(self, isPan):
