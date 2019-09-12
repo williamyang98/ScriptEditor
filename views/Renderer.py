@@ -30,7 +30,7 @@ class Renderer(Visitor):
 
         for child in children:
             if child:
-                create_connection(node, child)
+                self.create_connection(node, child)
         return node
 
     def visit_if_condition(self, con):

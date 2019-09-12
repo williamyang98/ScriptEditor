@@ -36,7 +36,7 @@ def main():
 
     organiser = Organiser()
     renderer = Renderer(scene, organiser)
-    with open("story/dead.rpy") as fp:
+    with open("story/script.rpy") as fp:
         labels = parse_lines(fp.readlines())
     for label in labels:
         label.accept(renderer)

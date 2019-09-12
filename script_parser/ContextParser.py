@@ -6,7 +6,8 @@ from .ConditionParser import ConditionParser
 from .MenuParser import MenuParser
 from .PythonScriptParser import PythonScriptParser
 
-regex_jump = re.compile(r"jump\s+(?P<label>[a-z0-9_\-]+)")
+regex_jump = re.compile(r"jump\s+(?P<label>[A-Za-z0-9_\-]+)")
+regex_call = re.compile(r"call\s+(?P<label>[A-Za-z0-9_\-]+)")
 regex_menu = re.compile(r"menu.*:")
 regex_condition = re.compile(r"if\s+.+:")
 regex_script = re.compile(r"\$\s*(?P<script>.+)")
@@ -38,6 +39,13 @@ class ContextParser(Parser):
             label = match["label"]
             jump = Jump(label)
             self._model.add_content(jump)
+            return
+        
+        match = regex_call.match(line)
+        if match:
+            label = match["label"]
+            call = Call(label)
+            self._model.add_content(call)
             return
         
         match = regex_script.match(line)
