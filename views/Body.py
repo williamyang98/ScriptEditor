@@ -10,21 +10,28 @@ class Body(Node):
         self.min_width = 100
         self.x_padding = 10
         self.y_padding = 5
+
     
     @abstractproperty
     def entries(self):
         pass
-    
-    def paint(self, painter, option, widget):
-        fontMetrics = painter.fontMetrics()
+
+    def calculateRect(self, metric=None):
+        if not metric:
+            metric = QtGui.QFontMetrics(QtGui.QFont())
+
         entries = list(self.entries)
 
-        height = (fontMetrics.height() + self.y_padding) * (len(entries)+1)
-        width = max([fontMetrics.width(s) for s,_ in entries]+[self.min_width])
+        height = (metric.height() + self.y_padding) * (len(entries)+1)
+        width = max([metric.width(s) for s,_ in entries]+[self.min_width])
         width += 2*self.x_padding
 
         self.height = height
         self.width = width
+    
+    def paint(self, painter, option, widget):
+        fontMetrics = painter.fontMetrics()
+        self.calculateRect(metric=fontMetrics)        
 
         super().paint(painter, option, widget)
 
@@ -34,9 +41,9 @@ class Body(Node):
             self.title)
         
         y = fontMetrics.height()+self.y_padding
-        for text, key in entries:
+        for text, key in self.entries:
             painter.drawText(
-                QtCore.QRectF(self.x_padding, y, width, fontMetrics.height()),
+                QtCore.QRectF(self.x_padding, y, self.width, fontMetrics.height()),
                 QtCore.Qt.AlignLeft,
                 text)
             socket = self.getSocket(key)

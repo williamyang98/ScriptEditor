@@ -7,6 +7,7 @@ class ContextView(Body):
         super().__init__(title="Context", colour=QtGui.QColor(0, 0, 255, 50))
         self._context = context
         self._createSockets()
+        self.calculateRect()
     
     def _createSockets(self):
         socket = Socket(self)

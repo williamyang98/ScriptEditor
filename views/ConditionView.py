@@ -7,6 +7,7 @@ class ConditionView(Body):
         super().__init__(title="Condition block", colour=QtGui.QColor(0, 255, 0, 50))
         self._condition = condition
         self._createSockets()
+        self.calculateRect()
     
     def _createSockets(self):
         socket = Socket(self)

@@ -7,6 +7,7 @@ class MenuView(Body):
         super().__init__(title="Menu", colour=QtGui.QColor(255, 0, 0, 50))
         self._menu = menu
         self._createSockets()
+        self.calculateRect()
     
     def _createSockets(self):
         socket = Socket(self)
