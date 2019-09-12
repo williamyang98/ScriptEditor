@@ -39,8 +39,8 @@ class TreeOrganiser:
         height += (self.y_padding * (len(node.children)-1))
         width = max((c.boundingRect.width() for c in node.children))
 
-        y = node.boundingRect.center().y() - height/2
-        x = node.boundingRect.right() + self.x_padding
+        y = node.rootRect.center().y() - height/2
+        x = node.rootRect.right() + self.x_padding
         for child in node.children:
             child.position = QtCore.QPointF(x, y)
             y += self.y_padding + child.boundingRect.height()
@@ -56,6 +56,10 @@ class Node(ABC):
 
     @abstractproperty
     def parent(self):
+        pass
+
+    @abstractproperty
+    def rootRect(self):
         pass
 
     @abstractproperty
@@ -89,6 +93,10 @@ class Base(Node):
         return self._boundingRect
     
     @property
+    def rootRect(self):
+        return QtCore.QRectF(self.position.x(), self.position.y(), 0, 0)
+    
+    @property
     def position(self):
         return self._position
     
@@ -104,7 +112,7 @@ class Base(Node):
             child.translate(delta)
 
     def updateBoundingRect(self):
-        rect = QtCore.QRectF(self.position.x(), self.position.y(), 0, 0)
+        rect = self.rootRect
         if len(self.children) == 0:
             self._boundingRect = rect
             return
@@ -123,6 +131,16 @@ class BasicNode(Node):
     @property
     def parent(self):
         return self._parent
+
+    @property
+    def rootRect(self):
+        rect = QtCore.QRectF(
+            self.root.boundingRect().x(),
+            self.root.boundingRect().y(),
+            self.root.boundingRect().width(),
+            self.root.boundingRect().height())
+        rect.moveTo(self.root.pos())
+        return rect
 
     @property
     def boundingRect(self):
@@ -145,13 +163,7 @@ class BasicNode(Node):
     
     def updateBoundingRect(self):
         # get initial rect
-        rect = QtCore.QRectF(
-            self.root.boundingRect().x(),
-            self.root.boundingRect().y(),
-            self.root.boundingRect().width(),
-            self.root.boundingRect().height())
-        rect.moveTo(self.root.pos())        
-
+        rect = self.rootRect
         if len(self.children) == 0:
             self._boundingRect = rect
             return

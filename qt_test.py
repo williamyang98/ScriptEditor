@@ -1,6 +1,13 @@
 from PySide2 import QtGui, QtCore, QtWidgets
-from views import Node, View, Renderer, Organiser, TreeOrganiser
+
+from OrganiserControls import OrganiserControls
+
+from views import View, Renderer, Organiser, TreeOrganiser
+from models import JSONSerialiser
 from script_parser import parse_lines
+
+
+import json
 import sys
 import os
 import argparse
@@ -15,7 +22,7 @@ def main():
         return 1
     
 
-    app = QtWidgets.QApplication([])
+    app = QtWidgets.QApplication([]) 
     splitter = QtWidgets.QSplitter()
 
     # files
@@ -32,17 +39,28 @@ def main():
     view = View(scene, splitter)
 
     splitter.setWindowTitle("Nodal editor")
-    splitter.show()
 
     # organiser = Organiser()
     organiser = TreeOrganiser()
     renderer = Renderer(scene, organiser)
-    with open("story/script.rpy") as fp:
+    with open("story/Day 1/4 engineering.rpy") as fp:
         labels = parse_lines(fp.readlines())
+    
+    serialiser = JSONSerialiser()
+    data = [label.accept(serialiser) for label in labels]
+
+    with open("parsed.json", "w") as fp:
+        json.dump(data, fp, indent=2)
+
     for label in labels:
         label.accept(renderer)
+
+    controls = OrganiserControls(None, organiser)
     
     organiser.organise()
+
+    splitter.show()
+    controls.show()
 
     return app.exec_()
 

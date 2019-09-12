@@ -11,6 +11,9 @@ class ConditionBlock(Visitable):
     
     def accept(self, visitor):
         return visitor.visit_condition_block(self)
+    
+    def __str__(self):
+        return "condition"
 
 class IfCondition(Visitable):
     def __init__(self, script):

@@ -11,6 +11,9 @@ class Menu(Visitable):
     def accept(self, visitor):
         return visitor.visit_menu(self)
 
+    def __str__(self):
+        return "menu"
+
 class Choice(Visitable):
     def __init__(self, description):
         self.description = description

@@ -17,6 +17,9 @@ class Jump(Visitable):
     
     def accept(self, visitor):
         return visitor.visit_jump(self)
+    
+    def __str__(self):
+        return "jump"
 
 class Call(Visitable):
     def __init__(self, label):
@@ -24,6 +27,9 @@ class Call(Visitable):
     
     def accept(self, visitor):
         return visitor.visit_call(self)
+    
+    def __str__(self):
+        return "call"
 
 class Script(Visitable):
     def __init__(self, script):
@@ -31,7 +37,10 @@ class Script(Visitable):
     
     def accept(self, visitor):
         return visitor.visit_script(self)
-
+    
+    def __str__(self):
+        return "SCRIPT {0}".format(self.script)
+    
 class PythonScript(Visitable):
     def __init__(self):
         self.lines = []
@@ -41,3 +50,6 @@ class PythonScript(Visitable):
     
     def accept(self, visitor):
         return visitor.visit_python_block(self)
+    
+    def __str__(self):
+        return "PYTHON BLOCK"
