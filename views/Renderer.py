@@ -2,7 +2,7 @@ from PySide2 import QtCore
 
 from models import Visitor
 from .Node import Node
-from .Connection import Connection
+from .CubicConnection import CubicConnection
 
 class Renderer(Visitor):
     def __init__(self, scene, organiser):
@@ -26,7 +26,7 @@ class Renderer(Visitor):
 
         for child in children:
             if child:
-                connection = Connection(node, child)
+                connection = CubicConnection(node, child)
                 self.scene.addItem(connection)
         return node
 
@@ -50,7 +50,7 @@ class Renderer(Visitor):
                     continue
                 child = content.accept(self)
                 if child:
-                    connection = Connection(node, child)
+                    connection = CubicConnection(node, child)
                     self.scene.addItem(connection)
         
         return node
@@ -64,7 +64,7 @@ class Renderer(Visitor):
             context = label.context.accept(self)
 
         if context:
-            connection = Connection(node, context)
+            connection = CubicConnection(node, context)
             self.scene.addItem(connection)
         return node
         
@@ -96,7 +96,7 @@ class Renderer(Visitor):
             for choice in menu.choices:
                 child = choice.accept(self)
                 if child:
-                    connection = Connection(node, child)
+                    connection = CubicConnection(node, child)
                     self.scene.addItem(connection)
         return node
 

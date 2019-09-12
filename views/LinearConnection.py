@@ -1,6 +1,6 @@
 from PySide2 import QtGui, QtCore, QtWidgets
 
-class Connection(QtWidgets.QGraphicsItem):
+class LinearConnection(QtWidgets.QGraphicsItem):
     def __init__(self, start, end):
         super().__init__()
         self.start = start
