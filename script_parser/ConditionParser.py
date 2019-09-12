@@ -77,7 +77,7 @@ class ConditionParser(Parser):
             self.condition = elif_condition
             self._model.add_elif_condition(elif_condition)
 
-            self.condition_parser = self.parse_else
+            self.condition_parser = self.parse_elif_or_else
             return True
         return False
     
