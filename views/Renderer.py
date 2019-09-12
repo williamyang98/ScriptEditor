@@ -72,10 +72,16 @@ class Renderer(Visitor):
         
 
     def visit_jump(self, jump):
-        pass
+        node = Node("jump: "+jump.label)
+        self.scene.addItem(node)
+        self.add_node(node, self.column)
+        return node
 
     def visit_call(self, call):
-        pass
+        node = Node("call: "+call.label)
+        self.scene.addItem(node)
+        self.add_node(node, self.column)
+        return node
 
     def visit_script(self, script):
         pass
@@ -85,7 +91,7 @@ class Renderer(Visitor):
 
     # menu
     def visit_menu(self, menu):
-        node = Node("menu: "+menu.description)
+        node = Node("menu: {0}".format(menu.description))
         self.scene.addItem(node)
         self.add_node(node, self.column)
         self.column += 1
