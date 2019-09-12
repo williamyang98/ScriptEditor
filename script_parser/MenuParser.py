@@ -1,4 +1,5 @@
 from .Parser import Parser
+from .ParseException import ParseException
 from models import Menu, Choice
 import re
 
@@ -14,8 +15,6 @@ class MenuParser(Parser):
         self.child = None
         self.choice = None
 
-        self.line_parser = self.parse_description
-
     def parse_line(self, indent, line_number, line):
         if self.indent is None:
             self.indent = indent
@@ -25,11 +24,12 @@ class MenuParser(Parser):
             if self.child:
                 return
         
-        if indent > self.indent:
+        if indent < self.indent:
             self.close()
             return
 
-        self.line_parser(indent, line_number, line)
+        self.parse_choice(indent, line_number, line) or \
+        self.parse_description(indent, line_number, line)
         
             
     def parse_description(self, indent, line_number, line):
@@ -37,7 +37,8 @@ class MenuParser(Parser):
         if match:
             description = match["description"]
             self._model.description = description
-            self.line_parser = self.parse_choice
+            return True
+        return False
 
     def parse_choice(self, indent, line_number, line):
         from .ContextParser import ContextParser
@@ -48,6 +49,8 @@ class MenuParser(Parser):
             self.choice = choice
             self._model.add_choice(choice)
             self.child = ContextParser(self)
+            return True
+        return False
     
     def close(self):
         if self.child:
