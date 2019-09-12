@@ -63,7 +63,7 @@ class ConditionParser(Parser):
             self.condition = if_condition
             self._model.if_condition = if_condition
 
-            self.condition_parser = self.parse_elif
+            self.condition_parser = self.parse_elif_or_else
             return True
         return False
     
@@ -74,7 +74,7 @@ class ConditionParser(Parser):
             condition = match["condition"]
             self.child = ContextParser(self)
             elif_condition = ElifCondition(condition)
-            self.condition = condition
+            self.condition = elif_condition
             self._model.add_elif_condition(elif_condition)
 
             self.condition_parser = self.parse_else
@@ -93,3 +93,7 @@ class ConditionParser(Parser):
             self.condition_parser = None
             return True
         return False
+    
+    def parse_elif_or_else(self, indent, line_number, line):
+        return (self.parse_elif(indent, line_number, line) or \
+                self.parse_else(indent, line_number, line))
