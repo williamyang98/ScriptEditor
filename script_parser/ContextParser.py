@@ -7,7 +7,7 @@ from .MenuParser import MenuParser
 from .PythonScriptParser import PythonScriptParser
 
 regex_jump = re.compile(r"jump\s+(?P<label>[A-Za-z0-9_\-]+)")
-regex_call = re.compile(r"call\s+(?P<label>[A-Za-z0-9_\-]+)")
+regex_call = re.compile(r"call\s+(?P<label>.+)")
 regex_menu = re.compile(r"menu.*:")
 regex_condition = re.compile(r"if\s+.+:")
 regex_script = re.compile(r"\$\s*(?P<script>.+)")
