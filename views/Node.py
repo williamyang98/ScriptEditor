@@ -24,6 +24,10 @@ class Node(QtWidgets.QGraphicsItem):
     def alignSocketRight(self, socket):
         x = self.boundingRect().right()-socket.boundingRect().width()/2
         socket.setPos(QtCore.QPointF(x, socket.pos().y()))
+    
+    def alignSocketVCentre(self, socket):
+        y = self.boundingRect().center().y()-socket.boundingRect().height()/2
+        socket.setPos(QtCore.QPointF(socket.pos().x(), y))
 
     def boundingRect(self):
         return QtCore.QRectF(0, 0, self.width, self.height) 

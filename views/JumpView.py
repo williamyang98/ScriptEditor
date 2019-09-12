@@ -1,18 +1,14 @@
 from PySide2 import QtGui, QtCore, QtWidgets
-from .Node import Node
-from .Socket import Socket
+from .Tag import Tag
 
-class JumpView(Node):
+class JumpView(Tag):
     def __init__(self, jump):
-        super().__init__()
+        super().__init__(left=True)
         self._jump = jump
-        socket = Socket(self)
-        self.addSocket("root", socket)
-        self.alignSocketLeft(socket)
-    
+
+    @property
+    def tag(self):
+        return self._jump.label
+
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)
-        painter.drawText(
-            self.boundingRect(), 
-            QtCore.Qt.AlignHCenter,
-            self._jump.label)
