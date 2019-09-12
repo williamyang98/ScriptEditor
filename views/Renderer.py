@@ -9,6 +9,10 @@ class Renderer(Visitor):
         self.scene = scene
         self.organiser = organiser
     
+    def create_connection(self, start, end):
+        connection = CubicConnection(start, end)
+        self.scene.addItem(connection)
+    
     # conditions
     def visit_condition_block(self, block):
         node = Node("condition_block")
@@ -26,8 +30,7 @@ class Renderer(Visitor):
 
         for child in children:
             if child:
-                connection = CubicConnection(node, child)
-                self.scene.addItem(connection)
+                create_connection(node, child)
         return node
 
     def visit_if_condition(self, con):
@@ -50,8 +53,7 @@ class Renderer(Visitor):
                     continue
                 child = content.accept(self)
                 if child:
-                    connection = CubicConnection(node, child)
-                    self.scene.addItem(connection)
+                    self.create_connection(node, child)
         
         return node
 
@@ -64,8 +66,8 @@ class Renderer(Visitor):
             context = label.context.accept(self)
 
         if context:
-            connection = CubicConnection(node, context)
-            self.scene.addItem(connection)
+            self.create_connection(node, context)
+
         return node
         
 
@@ -96,8 +98,8 @@ class Renderer(Visitor):
             for choice in menu.choices:
                 child = choice.accept(self)
                 if child:
-                    connection = CubicConnection(node, child)
-                    self.scene.addItem(connection)
+                    self.create_connection(node, child)
+
         return node
 
     def visit_choice(self, choice):
