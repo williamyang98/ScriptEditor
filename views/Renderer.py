@@ -1,7 +1,13 @@
 from PySide2 import QtCore
 
 from models import Visitor
-from .Node import Node
+
+from .ConditionView import ConditionView
+from .ContextView import ContextView
+from .LabelView import LabelView
+from .MenuView import MenuView
+from .JumpView import JumpView
+from .CallView import CallView
 from .CubicConnection import CubicConnection
 
 class Renderer(Visitor):
@@ -15,22 +21,28 @@ class Renderer(Visitor):
     
     # conditions
     def visit_condition_block(self, block):
-        node = Node("condition_block")
-        children = []
+        node = ConditionView(block)
         self.scene.addItem(node)
         self.organiser.add_node(node)
 
         with self.organiser:
-            if block.if_condition:
-                children.append(block.if_condition.accept(self))
-            for elif_condition in block.elif_conditions:
-                children.append(elif_condition.accept(self))
-            if block.else_condition:
-                children.append(block.else_condition.accept(self))
+            child = block.if_condition.accept(self)
+            start = node.getSocket(block.if_condition)
+            end = child.getSocket("root")
+            self.create_connection(start, end)
 
-        for child in children:
-            if child:
-                self.create_connection(node, child)
+            for elif_condition in block.elif_conditions:
+                child = elif_condition.accept(self)
+                start = node.getSocket(elif_condition)
+                end = child.getSocket("root")
+                self.create_connection(start, end)
+
+            if block.else_condition:
+                child = block.else_condition.accept(self)
+                start = node.getSocket(block.else_condition)
+                end = child.getSocket("root")
+                self.create_connection(start, end)
+
         return node
 
     def visit_if_condition(self, con):
@@ -44,7 +56,7 @@ class Renderer(Visitor):
 
     # context
     def visit_context(self, context):
-        node = Node("context")
+        node = ContextView(context) 
         self.scene.addItem(node)
         self.organiser.add_node(node)
         with self.organiser:
@@ -53,32 +65,35 @@ class Renderer(Visitor):
                     continue
                 child = content.accept(self)
                 if child:
-                    self.create_connection(node, child)
+                    start = node.getSocket(content)
+                    end = child.getSocket("root")
+                    self.create_connection(start, end)
         
         return node
 
     # renpy directives
     def visit_label(self, label):
-        node = Node("label: "+label.name)
+        node = LabelView(label) 
         self.scene.addItem(node)
         self.organiser.add_node(node)
         with self.organiser:
             context = label.context.accept(self)
 
-        if context:
-            self.create_connection(node, context)
+        start = node.getSocket("root")
+        end = context.getSocket("root")
+        self.create_connection(start, end)
 
         return node
         
 
     def visit_jump(self, jump):
-        node = Node("jump: "+jump.label)
+        node = JumpView(jump)
         self.scene.addItem(node)
         self.organiser.add_node(node)
         return node
 
     def visit_call(self, call):
-        node = Node("call: "+call.label)
+        node = CallView(call)
         self.scene.addItem(node)
         self.organiser.add_node(node)
         return node
@@ -91,14 +106,15 @@ class Renderer(Visitor):
 
     # menu
     def visit_menu(self, menu):
-        node = Node("menu: {0}".format(menu.description))
+        node = MenuView(menu)
         self.scene.addItem(node)
         self.organiser.add_node(node)
         with self.organiser:
             for choice in menu.choices:
                 child = choice.accept(self)
-                if child:
-                    self.create_connection(node, child)
+                start = node.getSocket(choice)
+                end = child.getSocket("root")
+                self.create_connection(start, end)
 
         return node
 

@@ -1,5 +1,4 @@
 from .View import View
-from .Node import Node
 
 from .LinearConnection import LinearConnection
 from .CubicConnection import CubicConnection
