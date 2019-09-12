@@ -1,5 +1,5 @@
 from PySide2 import QtGui, QtCore, QtWidgets
-from views import Node, View, Renderer, Organiser
+from views import Node, View, Renderer, Organiser, TreeOrganiser
 from script_parser import parse_lines
 import sys
 import os
@@ -34,7 +34,8 @@ def main():
     splitter.setWindowTitle("Nodal editor")
     splitter.show()
 
-    organiser = Organiser()
+    # organiser = Organiser()
+    organiser = TreeOrganiser()
     renderer = Renderer(scene, organiser)
     with open("story/script.rpy") as fp:
         labels = parse_lines(fp.readlines())
