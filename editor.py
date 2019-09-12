@@ -1,7 +1,7 @@
 from PySide2 import QtGui, QtCore, QtWidgets
 
 from editor import Manager, View
-from editor.organiser import TreeOrganiser 
+from editor.organisers import TreeOrganiser 
 
 
 import json
