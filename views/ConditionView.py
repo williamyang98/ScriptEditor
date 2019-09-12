@@ -4,7 +4,7 @@ from .Socket import Socket
 
 class ConditionView(Node):
     def __init__(self, condition):
-        super().__init__()
+        super().__init__(colour=QtGui.QColor(0, 255, 0, 50))
         self._condition = condition
         self._createSockets()
         self.min_width = 100
@@ -47,6 +47,7 @@ class ConditionView(Node):
 
         super().paint(painter, option, widget)
 
+        self.alignSocketLeft(self.getSocket("root"))
 
         painter.drawText(
             self.boundingRect(), 

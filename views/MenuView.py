@@ -4,7 +4,7 @@ from .Socket import Socket
 
 class MenuView(Node):
     def __init__(self, menu):
-        super().__init__()
+        super().__init__(colour=QtGui.QColor(255, 0, 0, 50))
         self._menu = menu
         self._createSockets()
         self.min_width = 100

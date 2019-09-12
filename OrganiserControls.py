@@ -6,7 +6,6 @@ class OrganiserControls(QtWidgets.QWidget):
         self.organiser = organiser
     
     def keyPressEvent(self, event):
-        print("i hear")
         if event.key() == QtCore.Qt.Key_O:
             self.organiser.organise()
 

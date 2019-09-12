@@ -4,7 +4,7 @@ from .Socket import Socket
 
 class ContextView(Node):
     def __init__(self, context):
-        super().__init__()
+        super().__init__(colour=QtGui.QColor(0, 0, 255, 50))
         self._context = context
         self._createSockets()
         self.min_width = 100
