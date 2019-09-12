@@ -9,12 +9,19 @@ class ConditionView(Node):
         self._createSockets()
     
     def _createSockets(self):
-        self.addSocket("root", Socket(self))
-        self.addSocket(self._condition.if_condition, Socket(self))
+        socket = Socket(self)
+        self.alignSocketLeft(socket)
+        self.addSocket("root", socket)
+
+        self._addConditionSocket(self._condition.if_condition, Socket(self))
         for elif_condition in self._condition.elif_conditions:
-            self.addSocket(elif_condition, Socket(self))
+            self._addConditionSocket(elif_condition, Socket(self))
         if self._condition.else_condition:
-            self.addSocket(self._condition.else_condition, Socket(self))
+            self._addConditionSocket(self._condition.else_condition, Socket(self))
+    
+    def _addConditionSocket(self, key, socket):
+        self.alignSocketRight(socket)
+        self.addSocket(key, socket)
     
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)

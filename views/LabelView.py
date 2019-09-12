@@ -7,6 +7,7 @@ class LabelView(Node):
         super().__init__()
         self._label = label
         socket = Socket(self)
+        self.alignSocketRight(socket)
         self.addSocket("root", socket)
     
     def paint(self, painter, option, widget):

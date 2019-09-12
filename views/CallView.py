@@ -6,7 +6,9 @@ class CallView(Node):
     def __init__(self, call):
         super().__init__()
         self._call = call
-        self.addSocket("root", Socket(self))
+        socket = Socket(self)
+        self.addSocket("root", socket)
+        self.alignSocketLeft(socket)
     
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)

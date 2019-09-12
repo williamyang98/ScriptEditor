@@ -16,6 +16,14 @@ class Node(QtWidgets.QGraphicsItem):
     
     def getSocket(self, key):
         return self.sockets.get(key)
+    
+    def alignSocketLeft(self, socket):
+        x = self.boundingRect().left()-socket.boundingRect().width()/2
+        socket.setPos(QtCore.QPointF(x, socket.pos().y()))
+    
+    def alignSocketRight(self, socket):
+        x = self.boundingRect().right()-socket.boundingRect().width()/2
+        socket.setPos(QtCore.QPointF(x, socket.pos().y()))
 
     def boundingRect(self):
         return QtCore.QRectF(0, 0, self.width, self.height) 

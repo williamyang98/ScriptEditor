@@ -10,12 +10,14 @@ class ContextView(Node):
     
     def _createSockets(self):
         socket = Socket(self)
+        self.alignSocketLeft(socket)
         self.addSocket("root", socket)
 
         for content in self._context.contents:
             if isinstance(content, str):
                 continue
             socket = Socket(self)
+            self.alignSocketRight(socket)
             self.addSocket(content, socket)
     
     def paint(self, painter, option, widget):

@@ -6,7 +6,9 @@ class JumpView(Node):
     def __init__(self, jump):
         super().__init__()
         self._jump = jump
-        self.addSocket("root", Socket(self))
+        socket = Socket(self)
+        self.addSocket("root", socket)
+        self.alignSocketLeft(socket)
     
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)

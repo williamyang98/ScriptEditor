@@ -9,9 +9,14 @@ class MenuView(Node):
         self._createSockets()
     
     def _createSockets(self):
-        self.addSocket("root", Socket(self))
+        socket = Socket(self)
+        self.alignSocketLeft(socket)
+        self.addSocket("root", socket)
+
         for choice in self._menu.choices:
-            self.addSocket(choice, Socket(self))
+            socket = Socket(self)
+            self.alignSocketRight(socket)
+            self.addSocket(choice, socket)
     
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)

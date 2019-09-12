@@ -1,9 +1,9 @@
 from PySide2 import QtGui, QtCore, QtWidgets
 
 class Socket(QtWidgets.QGraphicsItem):
-    def __init__(self, parent, radius=10):
+    def __init__(self, parent, radius=3.5):
         super().__init__(parent)
-        self._rect = QtCore.QRect(0, 0, 2*radius, 2*radius)
+        self._rect = QtCore.QRectF(0, 0, 2*radius, 2*radius)
     
     def boundingRect(self):
         return self._rect
