@@ -1,13 +1,17 @@
 from PySide2 import QtCore
+from .Organiser import Organiser
 from abc import ABC, abstractmethod, abstractproperty
 
-class TreeOrganiser:
+class TreeOrganiser(Organiser):
     def __init__(self):
-        self.root = Base(QtCore.QPointF(0, 0))
-        self.parent = self.root 
-        self.last_node = self.root
+        self.clear()
         self.x_padding = 50
         self.y_padding = 50
+    
+    def clear(self):
+        self.root = Base(QtCore.QPointF(0, 0))
+        self.parent = self.root
+        self.last_node = self.root
     
     def __enter__(self):
         self.parent = self.last_node

@@ -1,12 +1,17 @@
 from PySide2 import QtCore
+from .Organiser import Organiser
 
-class Organiser:
+class GridOrganiser(Organiser):
     def __init__(self):
-        self.grid = []
-        self.column = 0
+        self.clear()
         self.x_padding = 50
         self.y_padding = 40
         self.position = QtCore.QPoint(0, 0)
+    
+    def clear(self):
+        self.grid = []
+        self.column = 0
+
 
     # enable context management using enter/exit feature 
     def __enter__(self):
