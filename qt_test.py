@@ -34,10 +34,12 @@ def main():
     splitter.show()
 
     renderer = Renderer(scene)
-    with open("story/script.rpy") as fp:
+    with open("story/dead.rpy") as fp:
         labels = parse_lines(fp.readlines())
     for label in labels:
         label.accept(renderer)
+    
+    renderer.organise()
 
     return app.exec_()
 
