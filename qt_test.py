@@ -1,5 +1,5 @@
 from PySide2 import QtGui, QtCore, QtWidgets
-from views import Node, View, Renderer
+from views import Node, View, Renderer, Organiser
 from script_parser import parse_lines
 import sys
 import os
@@ -21,6 +21,7 @@ def main():
     # files
     model = QtWidgets.QFileSystemModel()
     model.setRootPath(args.dir)
+    model.setNameFilters(["*.rpy"])
 
     tree_view = QtWidgets.QTreeView(parent=splitter)
     tree_view.setModel(model)
@@ -33,13 +34,14 @@ def main():
     splitter.setWindowTitle("Nodal editor")
     splitter.show()
 
-    renderer = Renderer(scene)
+    organiser = Organiser()
+    renderer = Renderer(scene, organiser)
     with open("story/dead.rpy") as fp:
         labels = parse_lines(fp.readlines())
     for label in labels:
         label.accept(renderer)
     
-    renderer.organise()
+    organiser.organise()
 
     return app.exec_()
 

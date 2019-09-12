@@ -3,3 +3,4 @@ from .Node import Node
 from .Connection import Connection
 
 from .Renderer import Renderer
+from .Organiser import Organiser
