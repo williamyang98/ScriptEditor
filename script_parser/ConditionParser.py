@@ -28,7 +28,7 @@ class ConditionParser(Parser):
             if self.child:
                 return
         
-        if self.condition_parser is None or indent > self.indent:
+        if self.condition_parser is None or indent < self.indent:
             self.close()
             return
 

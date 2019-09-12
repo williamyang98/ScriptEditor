@@ -7,10 +7,10 @@ def parse_lines(lines):
         trimmed_line = line.lstrip()
         indent = len(line) - len(trimmed_line)
 
-        if len(line) == 0:
+        if len(trimmed_line) == 0:
             continue
             
-        if line[0] == '#':
+        if trimmed_line[0] == '#':
             continue
 
         try:
