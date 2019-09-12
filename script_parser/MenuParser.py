@@ -4,7 +4,7 @@ from models import Menu, Choice
 import re
 
 regex_description = re.compile(r"\"(?P<description>.+)\"")
-regex_choice = re.compile(r"\"(?P<choice>.+)\":")
+regex_choice = re.compile(r"(?P<choice>.+):")
 
 class MenuParser(Parser):
     def __init__(self, parent):
