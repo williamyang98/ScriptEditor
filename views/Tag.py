@@ -16,13 +16,18 @@ class Tag(Node):
     @abstractproperty
     def tag(self):
         pass
+
+    def calculateRect(self, metric=None):
+        if not metric:
+            metric = QtGui.QFontMetrics(QtGui.QFont())
+        width = metric.width(self.tag)
+        height = metric.height()
+        self.width = width + 2*self.x_padding
+        self.height = height + 2*self.y_padding
     
     def paint(self, painter, option, widget):
         fontMetrics = painter.fontMetrics()
-        width = fontMetrics.width(self.tag)
-        height = fontMetrics.height()
-        self.width = width + 2*self.x_padding
-        self.height = height + 2*self.y_padding
+        self.calculateRect(fontMetrics) 
 
         super().paint(painter, option, widget)
 

@@ -5,6 +5,7 @@ class CallView(Tag):
     def __init__(self, call):
         super().__init__(left=True)
         self._call = call
+        self.calculateRect()
 
     @property
     def tag(self):

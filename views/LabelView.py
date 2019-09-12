@@ -5,6 +5,7 @@ class LabelView(Tag):
     def __init__(self, label):
         super().__init__(left=False)
         self._label = label
+        self.calculateRect()
 
     @property
     def tag(self):
