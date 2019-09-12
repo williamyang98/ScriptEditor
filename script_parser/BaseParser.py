@@ -4,7 +4,7 @@ from .ParseException import ParseException
 from models import Label
 import re
 
-regex_label = re.compile(r"label\s+(?P<label>[a-z0-9_\-]+)\s*:")
+regex_label = re.compile(r"label\s+(?P<label>[A-Za-z0-9_\-]+)\s*:")
 
 class BaseParser(Parser):
     """Gets all labels and their contexts from lines
