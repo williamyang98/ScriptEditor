@@ -16,7 +16,7 @@ class Renderer(Visitor):
         self.browser = browser
     
     def create_connection(self, start, end):
-        connection = CubicConnection(start, end)
+        connection = CubicConnection(start, end, self.browser)
         self.browser.addItem(connection)
     
     # conditions

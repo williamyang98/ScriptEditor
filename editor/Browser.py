@@ -26,7 +26,8 @@ class Browser:
         return False
     
     def centerOnItem(self, item):
-        self.centerOnPosition(item.pos() + item.boundingRect().center())
+        pos = item.mapToScene(item.boundingRect().center())
+        self.centerOnPosition(pos)
 
     def centerOnPosition(self, position):
         self.view.centerOn(position)
