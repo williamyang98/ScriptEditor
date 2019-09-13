@@ -8,7 +8,7 @@ class Browser:
 
     def clear(self):
         self.view.scene().clear()
-        self.centreOn(QtCore.QPointF(0, 0))
+        self.centerOnPosition(QtCore.QPointF(0, 0))
         self.labels = {}
     
     def addItem(self, item):
@@ -20,10 +20,13 @@ class Browser:
     def findLabel(self, label):
         view = self.labels.get(label)
         if view is not None:
-            self.centreOn(view.pos())
+            self.centerOnItem(view)
             return True
         self.manager.findExternalLabel(label)
         return False
+    
+    def centerOnItem(self, item):
+        self.centerOnPosition(item.pos() + item.boundingRect().center())
 
-    def centreOn(self, position):
+    def centerOnPosition(self, position):
         self.view.centerOn(position)

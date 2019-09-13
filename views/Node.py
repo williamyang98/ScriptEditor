@@ -44,5 +44,13 @@ class Node(QtWidgets.QGraphicsItem):
         painter.setPen(QtGui.QPen(brush, 1.0))
         painter.setBrush(QtGui.QBrush(self.colour))
         painter.drawRoundedRect(self.boundingRect(), 5, 5)
+    
+    def mouseDoubleClickEvent(self, event):
+        if event.button() == QtCore.Qt.MouseButton.LeftButton:
+            self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, False)
+            self.browser.centerOnItem(self)
+            self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, True)
+            return
+        return super().mouseDoubleClickEvent(event)
 
         
