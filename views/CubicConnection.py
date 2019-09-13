@@ -1,10 +1,11 @@
 from PySide2 import QtCore, QtWidgets, QtGui
 
 class CubicConnection(QtWidgets.QGraphicsPathItem):
-    def __init__(self, start, end):
+    def __init__(self, start, end, browser):
         super().__init__()
         self.start = start
         self.end = end
+        self.browser = browser
 
     def paint(self, painter, option, widget):
         self.updatePath()
@@ -33,6 +34,20 @@ class CubicConnection(QtWidgets.QGraphicsPathItem):
 
         path.cubicTo(ctrl1, ctrl2, end)
         self.setPath(path)
+    
+    def mouseDoubleClickEvent(self, event):
+        if event.button() == QtCore.Qt.MouseButton.LeftButton:
+            pos = self.mapToScene(event.pos())
+            start_pos = self.start.mapToScene(self.start.boundingRect().center())
+            end_pos = self.end.mapToScene(self.end.boundingRect().center())
+            start_delta = pos-start_pos
+            end_delta = pos-end_pos
+            if start_delta.manhattanLength() > end_delta.manhattanLength():
+                self.browser.centerOnItem(self.start)
+            else:
+                self.browser.centerOnItem(self.end)
+            return
+        return super().mouseDoubleClickEvent(event)
 
 
     

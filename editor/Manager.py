@@ -1,40 +1,45 @@
 from PySide2 import QtGui, QtCore, QtWidgets
 
 from views import Renderer
-from models import JSONSerialiser
-from script_parser import parse_lines
+from .Browser import Browser
+from .LabelsLoader import LabelsLoader
 
-import json
 import sys
 import os
 
 class Manager:
-    def __init__(self, organiser, scene):
+    def __init__(self, organiser, view):
         self.organiser = organiser
-        self.scene = scene
-        self.renderer = Renderer(scene, organiser)
-        self.serialiser = JSONSerialiser()
-        self.labels = []
+        self.view = view
+        self.browser = Browser(self, view) 
+        self.renderer = Renderer(organiser, self.browser)
+        self.loader = LabelsLoader()
     
-    def loadFromFile(self, filepath):
+    def findExternalLabel(self, label):
+        filepath = self.loader.getLabelFilepath(label)
+        if filepath:
+            self.openFile(filepath)
+            self.browser.findLabel(label)
+    
+    def openFile(self, filepath):
+        labels = self.loader.loadFromFilepath(filepath)
+        if len(labels) > 0:
+            self._displayLabels(labels)
+    
+    def cacheFile(self, filepath):
+        self.loader.loadFromFilepath(filepath) 
+
+    def _displayLabels(self, labels):
         self.clear()
-
-        with open(filepath, "r", encoding="utf8") as fp:
-            self.labels = parse_lines(fp.readlines())
-        
-        for label in self.labels:
+        for label in labels:
             label.accept(self.renderer)
-
-        self.organiseView() 
+        self.organiseView()
     
     def organiseView(self):
         self.organiser.organise()
 
     def clear(self):
         self.organiser.clear()
-        self.scene.clear()
+        self.browser.clear()
     
-    def saveModel(self, filepath):
-        data = [label.accept(serialiser) for label in self.labels]
-        with open(filepath, "w", encoding="utf8") as fp:
-            json.dump(data, fp, indent=2)
+    

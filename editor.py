@@ -40,14 +40,15 @@ def main():
 
     # organiser = Organiser()
     organiser = TreeOrganiser()
-    manager = Manager(organiser, scene)
+    manager = Manager(organiser, view)
+    manager.cacheFile(args.dir)
 
     splitter.show()
 
     def dummy(_):
         index = tree_view.currentIndex()
         filepath = model.filePath(index)
-        manager.loadFromFile(filepath)
+        manager.openFile(filepath)
 
     tree_view.clicked.connect(dummy)
     # controls.show()

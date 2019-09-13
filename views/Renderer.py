@@ -11,18 +11,18 @@ from .CallView import CallView
 from .CubicConnection import CubicConnection
 
 class Renderer(Visitor):
-    def __init__(self, scene, organiser):
-        self.scene = scene
+    def __init__(self, organiser, browser):
         self.organiser = organiser
+        self.browser = browser
     
     def create_connection(self, start, end):
-        connection = CubicConnection(start, end)
-        self.scene.addItem(connection)
+        connection = CubicConnection(start, end, self.browser)
+        self.browser.addItem(connection)
     
     # conditions
     def visit_condition_block(self, block):
-        node = ConditionView(block)
-        self.scene.addItem(node)
+        node = ConditionView(block, self.browser)
+        self.browser.addItem(node)
         self.organiser.add_node(node)
 
         with self.organiser:
@@ -56,8 +56,8 @@ class Renderer(Visitor):
 
     # context
     def visit_context(self, context):
-        node = ContextView(context) 
-        self.scene.addItem(node)
+        node = ContextView(context, self.browser) 
+        self.browser.addItem(node)
         self.organiser.add_node(node)
         with self.organiser:
             for content in context.contents:
@@ -73,8 +73,8 @@ class Renderer(Visitor):
 
     # renpy directives
     def visit_label(self, label):
-        node = LabelView(label) 
-        self.scene.addItem(node)
+        node = LabelView(label, self.browser) 
+        self.browser.addItem(node)
         self.organiser.add_node(node)
         with self.organiser:
             context = label.context.accept(self)
@@ -87,14 +87,14 @@ class Renderer(Visitor):
         
 
     def visit_jump(self, jump):
-        node = JumpView(jump)
-        self.scene.addItem(node)
+        node = JumpView(jump, self.browser)
+        self.browser.addItem(node)
         self.organiser.add_node(node)
         return node
 
     def visit_call(self, call):
-        node = CallView(call)
-        self.scene.addItem(node)
+        node = CallView(call, self.browser)
+        self.browser.addItem(node)
         self.organiser.add_node(node)
         return node
 
@@ -106,8 +106,8 @@ class Renderer(Visitor):
 
     # menu
     def visit_menu(self, menu):
-        node = MenuView(menu)
-        self.scene.addItem(node)
+        node = MenuView(menu, self.browser)
+        self.browser.addItem(node)
         self.organiser.add_node(node)
         with self.organiser:
             for choice in menu.choices:

@@ -3,8 +3,8 @@ from .Body import Body
 from .Socket import Socket
 
 class ConditionView(Body):
-    def __init__(self, condition):
-        super().__init__(title="Condition block", colour=QtGui.QColor(0, 255, 0, 50))
+    def __init__(self, condition, browser):
+        super().__init__(title="Condition block", browser=browser, colour=QtGui.QColor(0, 255, 0, 50))
         self._condition = condition
         self._createSockets()
         self.calculateRect()

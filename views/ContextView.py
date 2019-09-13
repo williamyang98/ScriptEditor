@@ -3,10 +3,11 @@ from .Body import Body
 from .Socket import Socket
 
 class ContextView(Body):
-    def __init__(self, context):
-        super().__init__(title="Context", colour=QtGui.QColor(0, 0, 255, 50))
+    def __init__(self, context, browser):
+        super().__init__(title="Context", browser=browser, colour=QtGui.QColor(0, 0, 255, 50))
         self._context = context
         self._createSockets()
+        self._createEntries()
         self.calculateRect()
     
     def _createSockets(self):
@@ -18,16 +19,18 @@ class ContextView(Body):
             socket = Socket(self)
             self.addSocket(content, socket)
     
-    @property
-    def entries(self):
-        entries = []
+    def _createEntries(self):
+        self._entries = []
         for content in self._context.contents:
             if isinstance(content, str):
-                entries.append((content, None))
+                self._entries.append((content, None))
             else:
                 text = str(content)
-                entries.append((text, content))
-        return entries
+                self._entries.append((text, content))
+    
+    @property
+    def entries(self):
+        return self._entries
     
     def paint(self, painter, option, widget):
         super().paint(painter, option, widget)
