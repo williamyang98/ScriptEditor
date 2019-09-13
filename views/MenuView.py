@@ -3,8 +3,8 @@ from .Body import Body
 from .Socket import Socket
 
 class MenuView(Body):
-    def __init__(self, menu):
-        super().__init__(title="Menu", colour=QtGui.QColor(255, 0, 0, 50))
+    def __init__(self, menu, browser):
+        super().__init__(title="Menu", browser=browser, colour=QtGui.QColor(255, 0, 0, 50))
         self._menu = menu
         self._createSockets()
         self.calculateRect()

@@ -3,8 +3,8 @@ from .Body import Body
 from .Socket import Socket
 
 class ContextView(Body):
-    def __init__(self, context):
-        super().__init__(title="Context", colour=QtGui.QColor(0, 0, 255, 50))
+    def __init__(self, context, browser):
+        super().__init__(title="Context", browser=browser, colour=QtGui.QColor(0, 0, 255, 50))
         self._context = context
         self._createSockets()
         self.calculateRect()

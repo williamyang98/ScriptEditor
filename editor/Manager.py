@@ -1,6 +1,7 @@
 from PySide2 import QtGui, QtCore, QtWidgets
 
 from views import Renderer
+from .Browser import Browser
 from models import JSONSerialiser
 from script_parser import parse_lines
 
@@ -12,7 +13,8 @@ class Manager:
     def __init__(self, organiser, scene):
         self.organiser = organiser
         self.scene = scene
-        self.renderer = Renderer(scene, organiser)
+        self.browser = Browser() 
+        self.renderer = Renderer(scene, organiser, self.browser)
         self.serialiser = JSONSerialiser()
         self.labels = []
     

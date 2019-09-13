@@ -2,14 +2,19 @@ from PySide2 import QtGui, QtCore, QtWidgets
 from abc import ABC
 
 class Node(QtWidgets.QGraphicsItem):
-    def __init__(self, colour=QtGui.QColor(255, 255, 255)):
+    def __init__(self, browser, colour=QtGui.QColor(255, 255, 255)):
         super().__init__()
+        self._browser = browser
         self.colour = colour 
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, True)
         # self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
         self.width = 100
         self.height = 100
         self.sockets = {}
+
+    @property
+    def browser(self):
+        return self._browser
 
     def addSocket(self, key, socket):
         self.sockets.setdefault(key, socket)

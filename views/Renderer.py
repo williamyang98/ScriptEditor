@@ -11,9 +11,10 @@ from .CallView import CallView
 from .CubicConnection import CubicConnection
 
 class Renderer(Visitor):
-    def __init__(self, scene, organiser):
+    def __init__(self, scene, organiser, browser):
         self.scene = scene
         self.organiser = organiser
+        self.browser = browser
     
     def create_connection(self, start, end):
         connection = CubicConnection(start, end)
@@ -21,7 +22,7 @@ class Renderer(Visitor):
     
     # conditions
     def visit_condition_block(self, block):
-        node = ConditionView(block)
+        node = ConditionView(block, self.browser)
         self.scene.addItem(node)
         self.organiser.add_node(node)
 
@@ -56,7 +57,7 @@ class Renderer(Visitor):
 
     # context
     def visit_context(self, context):
-        node = ContextView(context) 
+        node = ContextView(context, self.browser) 
         self.scene.addItem(node)
         self.organiser.add_node(node)
         with self.organiser:
@@ -73,7 +74,7 @@ class Renderer(Visitor):
 
     # renpy directives
     def visit_label(self, label):
-        node = LabelView(label) 
+        node = LabelView(label, self.browser) 
         self.scene.addItem(node)
         self.organiser.add_node(node)
         with self.organiser:
@@ -87,13 +88,13 @@ class Renderer(Visitor):
         
 
     def visit_jump(self, jump):
-        node = JumpView(jump)
+        node = JumpView(jump, self.browser)
         self.scene.addItem(node)
         self.organiser.add_node(node)
         return node
 
     def visit_call(self, call):
-        node = CallView(call)
+        node = CallView(call, self.browser)
         self.scene.addItem(node)
         self.organiser.add_node(node)
         return node
@@ -106,7 +107,7 @@ class Renderer(Visitor):
 
     # menu
     def visit_menu(self, menu):
-        node = MenuView(menu)
+        node = MenuView(menu, self.browser)
         self.scene.addItem(node)
         self.organiser.add_node(node)
         with self.organiser:
