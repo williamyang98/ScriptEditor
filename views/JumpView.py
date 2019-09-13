@@ -17,7 +17,7 @@ class JumpView(Tag):
     def mouseDoubleClickEvent(self, event):
         if event.button() == QtCore.Qt.MouseButton.LeftButton:
             self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, False)
-            self.browser.findLabel(self._jump.label)
-            self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, True)
+            if self.browser.findLabel(self._jump.label):
+                self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, True)
             return
         return super().mouseDoubleClickEvent(event)

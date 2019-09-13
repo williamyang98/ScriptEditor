@@ -1,7 +1,8 @@
 from PySide2 import QtCore
 
 class Browser:
-    def __init__(self, view):
+    def __init__(self, manager, view):
+        self.manager = manager
         self.labels = {}
         self.view = view
 
@@ -20,6 +21,9 @@ class Browser:
         view = self.labels.get(label)
         if view is not None:
             self.centreOn(view.pos())
+            return True
+        self.manager.findExternalLabel(label)
+        return False
 
     def centreOn(self, position):
         self.view.centerOn(position)
