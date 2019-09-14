@@ -1,14 +1,9 @@
 from PySide2 import QtGui, QtCore, QtWidgets
+from editor import Editor
 
-from editor import Manager, View
-from editor.organisers import TreeOrganiser 
-
-
-import json
-import sys
 import os
+import sys
 import argparse
-
 
 def main():
     parser = argparse.ArgumentParser()
@@ -21,36 +16,8 @@ def main():
     
 
     app = QtWidgets.QApplication([]) 
-    splitter = QtWidgets.QSplitter()
-
-    # files
-    model = QtWidgets.QFileSystemModel()
-    model.setRootPath(args.dir)
-    model.setNameFilters(["*.rpy"])
-
-    tree_view = QtWidgets.QTreeView(parent=splitter)
-    tree_view.setModel(model)
-    tree_view.setRootIndex(model.index(args.dir))
-
-    # scene
-    scene = QtWidgets.QGraphicsScene()
-    view = View(scene, splitter)
-
-    splitter.setWindowTitle("Nodal editor")
-
-    # organiser = Organiser()
-    organiser = TreeOrganiser()
-    manager = Manager(organiser, view)
-    manager.cacheFile(args.dir)
-
-    splitter.show()
-
-    def dummy(index):
-        filepath = model.filePath(index)
-        manager.openFile(filepath)
-
-    tree_view.clicked.connect(dummy)
-    # controls.show()
+    editor = Editor(args.dir)
+    editor.show()
 
     return app.exec_()
 
