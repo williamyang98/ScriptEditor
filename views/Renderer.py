@@ -11,8 +11,8 @@ from .CallView import CallView
 from .CubicConnection import CubicConnection
 
 class Renderer(Visitor):
-    def __init__(self, organiser, browser):
-        self.organiser = organiser
+    def __init__(self, nodeGraph, browser):
+        self.nodeGraph = nodeGraph
         self.browser = browser
     
     def create_connection(self, start, end):
@@ -23,9 +23,9 @@ class Renderer(Visitor):
     def visit_condition_block(self, block):
         node = ConditionView(block, self.browser)
         self.browser.addItem(node)
-        self.organiser.add_node(node)
+        self.nodeGraph.addView(node)
 
-        with self.organiser:
+        with self.nodeGraph:
             child = block.if_condition.accept(self)
             start = node.getSocket(block.if_condition)
             end = child.getSocket("root")
@@ -58,8 +58,8 @@ class Renderer(Visitor):
     def visit_context(self, context):
         node = ContextView(context, self.browser) 
         self.browser.addItem(node)
-        self.organiser.add_node(node)
-        with self.organiser:
+        self.nodeGraph.addView(node)
+        with self.nodeGraph:
             for content in context.contents:
                 if isinstance(content, str):
                     continue
@@ -75,8 +75,8 @@ class Renderer(Visitor):
     def visit_label(self, label):
         node = LabelView(label, self.browser) 
         self.browser.addItem(node)
-        self.organiser.add_node(node)
-        with self.organiser:
+        self.nodeGraph.addView(node)
+        with self.nodeGraph:
             context = label.context.accept(self)
 
         start = node.getSocket("root")
@@ -89,13 +89,13 @@ class Renderer(Visitor):
     def visit_jump(self, jump):
         node = JumpView(jump, self.browser)
         self.browser.addItem(node)
-        self.organiser.add_node(node)
+        self.nodeGraph.addView(node)
         return node
 
     def visit_call(self, call):
         node = CallView(call, self.browser)
         self.browser.addItem(node)
-        self.organiser.add_node(node)
+        self.nodeGraph.addView(node)
         return node
 
     def visit_script(self, script):
@@ -108,8 +108,8 @@ class Renderer(Visitor):
     def visit_menu(self, menu):
         node = MenuView(menu, self.browser)
         self.browser.addItem(node)
-        self.organiser.add_node(node)
-        with self.organiser:
+        self.nodeGraph.addView(node)
+        with self.nodeGraph:
             for choice in menu.choices:
                 child = choice.accept(self)
                 start = node.getSocket(choice)
