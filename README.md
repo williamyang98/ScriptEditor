@@ -19,12 +19,12 @@ Files can also be inspected in the node editor from the file explorer as well. T
 * Can represent dialogue, conditionals, menus, and jump/call directives
 * Can export the entire graph model as JSON
 * Have an outline of panel for each node graph for faster navigation
+* Add tabs for multiple files
 
 ### Roadmap
 * Show jump/call directives associated for each label to see what uses the label
 * Add breadcrumb for better navigation
 * Add undo and redo when moving between nodes in files
-* Add tabs for multiple files
 * Add split screen to view two files at once
 * Add support for Renpy screens
 * Integrate an editor so that the Renpy script can be created using a node graph
@@ -32,6 +32,7 @@ Files can also be inspected in the node editor from the file explorer as well. T
 ### Bugs
 * Connections between nodes don't render unless camera is moved to the origin
 * Artifacting left behind when cubic connection is moved (Possible bounding rect issue)
+* Graph view under the tab isn't aligned properly so the (0, 0) is at the centre, but is instead offset to the right
   
 ### Requirements
 * Python 3.0 and above
