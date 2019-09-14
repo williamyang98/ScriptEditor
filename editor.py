@@ -45,8 +45,7 @@ def main():
 
     splitter.show()
 
-    def dummy(_):
-        index = tree_view.currentIndex()
+    def dummy(index):
         filepath = model.filePath(index)
         manager.openFile(filepath)
 

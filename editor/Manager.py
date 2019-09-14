@@ -3,6 +3,7 @@ from PySide2 import QtGui, QtCore, QtWidgets
 from views import Renderer
 from .Browser import Browser
 from .LabelsLoader import LabelsLoader
+from views import NodeGraph
 
 import sys
 import os
@@ -12,7 +13,8 @@ class Manager:
         self.organiser = organiser
         self.view = view
         self.browser = Browser(self, view) 
-        self.renderer = Renderer(organiser, self.browser)
+        self.nodeGraph = NodeGraph()
+        self.renderer = Renderer(self.nodeGraph, self.browser)
         self.loader = LabelsLoader()
     
     def findExternalLabel(self, label):
@@ -36,10 +38,10 @@ class Manager:
         self.organiseView()
     
     def organiseView(self):
-        self.organiser.organise()
+        self.organiser.organise(self.nodeGraph)
 
     def clear(self):
-        self.organiser.clear()
+        self.nodeGraph.clear()
         self.browser.clear()
     
     
