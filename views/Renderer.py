@@ -10,19 +10,22 @@ from .JumpView import JumpView
 from .CallView import CallView
 from .CubicConnection import CubicConnection
 
+from .node_graph import NodeGraph
+
 class Renderer(Visitor):
-    def __init__(self, nodeGraph, browser):
-        self.nodeGraph = nodeGraph
-        self.browser = browser
+    def __init__(self, scene, editor):
+        self.nodeGraph = NodeGraph()
+        self.scene = scene
+        self.editor = editor
     
     def create_connection(self, start, end):
-        connection = CubicConnection(start, end, self.browser)
-        self.browser.addItem(connection)
+        connection = CubicConnection(start, end, self.editor)
+        self.scene.addItem(connection)
     
     # conditions
     def visit_condition_block(self, block):
-        node = ConditionView(block, self.browser)
-        self.browser.addItem(node)
+        node = ConditionView(block, self.editor)
+        self.scene.addItem(node)
         self.nodeGraph.addView(node)
 
         with self.nodeGraph:
@@ -56,8 +59,8 @@ class Renderer(Visitor):
 
     # context
     def visit_context(self, context):
-        node = ContextView(context, self.browser) 
-        self.browser.addItem(node)
+        node = ContextView(context, self.editor) 
+        self.scene.addItem(node)
         self.nodeGraph.addView(node)
         with self.nodeGraph:
             for content in context.contents:
@@ -73,8 +76,8 @@ class Renderer(Visitor):
 
     # renpy directives
     def visit_label(self, label):
-        node = LabelView(label, self.browser) 
-        self.browser.addItem(node)
+        node = LabelView(label, self.editor) 
+        self.scene.addItem(node)
         self.nodeGraph.addView(node)
         with self.nodeGraph:
             context = label.context.accept(self)
@@ -87,14 +90,14 @@ class Renderer(Visitor):
         
 
     def visit_jump(self, jump):
-        node = JumpView(jump, self.browser)
-        self.browser.addItem(node)
+        node = JumpView(jump, self.editor)
+        self.scene.addItem(node)
         self.nodeGraph.addView(node)
         return node
 
     def visit_call(self, call):
-        node = CallView(call, self.browser)
-        self.browser.addItem(node)
+        node = CallView(call, self.editor)
+        self.editor.addItem(node)
         self.nodeGraph.addView(node)
         return node
 
@@ -106,8 +109,8 @@ class Renderer(Visitor):
 
     # menu
     def visit_menu(self, menu):
-        node = MenuView(menu, self.browser)
-        self.browser.addItem(node)
+        node = MenuView(menu, self.editor)
+        self.scene.addItem(node)
         self.nodeGraph.addView(node)
         with self.nodeGraph:
             for choice in menu.choices:

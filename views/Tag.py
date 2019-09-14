@@ -5,8 +5,8 @@ from .Socket import Socket
 from abc import abstractproperty
 
 class Tag(Node):
-    def __init__(self, browser, left=False):
-        super().__init__(browser)
+    def __init__(self, editor, left=False):
+        super().__init__(editor)
         socket = Socket(self)
         self.addSocket("root", socket)
         self.left = left
