@@ -31,7 +31,7 @@ Files can also be inspected in the node editor from the file explorer as well. T
 
 ### Bugs
 * Connections between nodes don't render unless camera is moved to the origin
-* Artifcating left behind when cubic connection is moved (Possible bounding rect issue)
+* Artifacting left behind when cubic connection is moved (Possible bounding rect issue)
   
 ### Requirements
 * Python 3.0 and above
