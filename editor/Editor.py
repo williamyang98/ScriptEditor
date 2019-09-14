@@ -45,6 +45,7 @@ class Editor:
     
     def findNode(self, node):
         self.graphView.focusItem(node)
+        self.outline.focusView(node)
     
     def show(self):
         self.horizontalSplitter.show()

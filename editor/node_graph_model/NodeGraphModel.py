@@ -6,7 +6,35 @@ from .NodeGraphItem import NodeGraphItem, RootNodeGraphItem
 class NodeGraphModel(QtCore.QAbstractItemModel):
     def __init__(self, labels, parent=None):
         super().__init__(parent)
+        self.viewCache = {}
+        self.indexCache = {}
         self.rootItem = RootNodeGraphItem(labels)    
+        self._cacheNodeModel(self.rootItem)
+    
+    def getNodeFromView(self, view):
+        return self.viewCache.get(view)
+    
+    def getIndexFromNode(self, node):
+        return self.indexCache.get(node)
+    
+    def getNodeFromIndex(self, index):
+        if not index.isValid():
+            return None
+        
+        item = index.internalPointer()
+        return item.node
+    
+    def _cacheNodeModel(self, nodeModel):
+        node = nodeModel.node
+        if node and node.view:
+            self.viewCache.setdefault(node.view, nodeModel)
+        for childModel in nodeModel.children:
+            self._cacheNodeModel(childModel)
+
+    def createIndex(self, row, column, item):
+        index = super().createIndex(row, column, item)
+        self.indexCache.setdefault(item, index)
+        return index
         
     def index(self, row, column, parent):
         # index is invalid
@@ -63,13 +91,6 @@ class NodeGraphModel(QtCore.QAbstractItemModel):
         
         item = index.internalPointer()
         return item.getData(index.column())
-    
-    def getNode(self, index):
-        if not index.isValid():
-            return None
-        
-        item = index.internalPointer()
-        return item.node
     
     def flags(self, index):
         if not index.isValid():
