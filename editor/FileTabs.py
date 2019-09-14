@@ -9,12 +9,14 @@ class FileTabs(QtWidgets.QTabWidget):
         self.editor = editor
         self.tabs = self # TODO: Decouple into a widget as composite
         self.tabs.setTabsClosable(True)
+        self.tabs.setMovable(True)
         self.openedFiles = {}
 
         self.currentChanged.connect(self._onTabChange)
         self.tabCloseRequested.connect(self._onTabClose)
 
     def openLabels(self, labels, filepath):
+        filepath = os.path.normpath(filepath)
         if filepath in self.openedFiles:
             index = self.openedFiles.get(filepath)
             self.tabs.setCurrentIndex(index)
