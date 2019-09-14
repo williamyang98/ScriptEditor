@@ -19,4 +19,5 @@ class FileExplorer:
         self.editor.openFile(filepath)
     
     def updateFilepath(self, filepath):
-        pass
+        index = self.model.index(filepath)
+        self.tree_view.setCurrentIndex(index)

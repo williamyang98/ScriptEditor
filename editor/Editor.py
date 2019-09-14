@@ -22,6 +22,7 @@ class Editor:
 
     def openFile(self, filepath):
         labels = self.loader.loadFromFilepath(filepath)
+        self.fileExplorer.updateFilepath(filepath)
         self.graphView.open(labels)
 
     def findLabel(self, label, search=True):
