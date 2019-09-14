@@ -1,11 +1,11 @@
 from PySide2 import QtCore, QtWidgets, QtGui
 
 class CubicConnection(QtWidgets.QGraphicsPathItem):
-    def __init__(self, start, end, browser):
+    def __init__(self, start, end, editor):
         super().__init__()
         self.start = start
         self.end = end
-        self.browser = browser
+        self.editor = editor
 
     def paint(self, painter, option, widget):
         self.updatePath()
@@ -43,9 +43,9 @@ class CubicConnection(QtWidgets.QGraphicsPathItem):
             start_delta = pos-start_pos
             end_delta = pos-end_pos
             if start_delta.manhattanLength() > end_delta.manhattanLength():
-                self.browser.centerOnItem(self.start)
+                self.editor.findNode(self.start)
             else:
-                self.browser.centerOnItem(self.end)
+                self.editor.findNode(self.end)
             return
         return super().mouseDoubleClickEvent(event)
 

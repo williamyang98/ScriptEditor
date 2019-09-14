@@ -2,9 +2,9 @@ from PySide2 import QtGui, QtCore, QtWidgets
 from abc import ABC
 
 class Node(QtWidgets.QGraphicsItem):
-    def __init__(self, browser, colour=QtGui.QColor(255, 255, 255)):
+    def __init__(self, editor, colour=QtGui.QColor(255, 255, 255)):
         super().__init__()
-        self._browser = browser
+        self._editor = editor
         self.colour = colour 
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, True)
         # self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
@@ -13,8 +13,8 @@ class Node(QtWidgets.QGraphicsItem):
         self.sockets = {}
 
     @property
-    def browser(self):
-        return self._browser
+    def editor(self):
+        return self._editor
 
     def addSocket(self, key, socket):
         self.sockets.setdefault(key, socket)
@@ -48,7 +48,7 @@ class Node(QtWidgets.QGraphicsItem):
     def mouseDoubleClickEvent(self, event):
         if event.button() == QtCore.Qt.MouseButton.LeftButton:
             self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, False)
-            self.browser.centerOnItem(self)
+            self.editor.findNode(self)
             self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, True)
             return
         return super().mouseDoubleClickEvent(event)

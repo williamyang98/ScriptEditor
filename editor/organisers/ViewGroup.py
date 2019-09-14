@@ -1,16 +1,10 @@
 from PySide2 import QtCore
-from .Node import Node
 
-class BasicNode(Node):
-    def __init__(self, root, parent):
-        super().__init__()
-        self.root = root
-        self._parent = parent
-        self.updateBoundingRect()
-    
-    @property
-    def parent(self):
-        return self._parent
+class ViewGroup:
+    def __init__(self, node):
+        self.root = node.view 
+        self.children = [ViewGroup(child) for child in node.children]
+        self._boundingRect = self._calculateBoundingRect()
 
     @property
     def rootRect(self):
@@ -25,30 +19,27 @@ class BasicNode(Node):
     @property
     def boundingRect(self):
         return self._boundingRect
-    
+
     @property
     def position(self):
         return self.boundingRect.topLeft()
-    
+
     @position.setter
     def position(self, pos):
         delta = pos - self.position
         self.translate(delta)
-
+    
     def translate(self, delta):
         self._boundingRect.translate(delta)
         self.root.setPos(self.root.pos()+delta)
         for child in self.children:
             child.translate(delta)
-    
+
     def updateBoundingRect(self):
-        # get initial rect
+        self._boundingRect = self._calculateBoundingRect()
+
+    def _calculateBoundingRect(self):
         rect = self.rootRect
-        if len(self.children) == 0:
-            self._boundingRect = rect
-            return
-        # expand rect
         for child in self.children:
             rect = rect.united(child.boundingRect)
-
-        self._boundingRect = rect 
+        return rect
