@@ -1,6 +1,8 @@
 from PySide2 import QtGui, QtCore, QtWidgets
 from .graphview import GraphView
 
+import os
+
 class FileTabs(QtWidgets.QTabWidget):
     def __init__(self, editor, parent):
         super().__init__(parent=parent)
@@ -20,7 +22,8 @@ class FileTabs(QtWidgets.QTabWidget):
 
         graphView = GraphView(editor=self.editor, parent=self.tabs)
         graphView.open(labels)
-        index = self.tabs.addTab(graphView, filepath)
+        title = os.path.basename(filepath)
+        index = self.tabs.addTab(graphView, title)
         self.openedFiles.setdefault(filepath, index)
         self.tabs.setCurrentIndex(index)
     
