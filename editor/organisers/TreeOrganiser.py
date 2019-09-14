@@ -13,9 +13,7 @@ class TreeOrganiser(Organiser):
             self._organiseViewGroup(viewGroup)
         height = sum((vg.boundingRect.height() for vg in viewGroups))
         height += self.y_padding * (len(viewGroups)-1)
-        width = max((vg.boundingRect.width() for vg in viewGroups))
 
-        x_centre = width/2
         y_centre = height/2
 
         y = -y_centre 
@@ -37,7 +35,7 @@ class TreeOrganiser(Organiser):
         # organise in order of children
         height = sum((c.boundingRect.height() for c in group.children))
         height += (self.y_padding * (len(group.children)-1))
-        width = max((c.boundingRect.width() for c in group.children))
+        width = max((c.boundingRect.width() for c in group.children), default=0)
 
         y = group.rootRect.center().y() - height/2
         x = group.rootRect.right() + max([self.y_padding, height/10, group.rootRect.height()/10]) 
