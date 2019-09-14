@@ -12,7 +12,9 @@ at the label. By doubling clicking on a jump or call node, you will be taken to 
 Files can also be inspected in the node editor from the file explorer as well. This way, you can easily map out the flow and branches of your story in a visually intuitive manner.
 
 ### Gallery
-![alt text](docs/alpha_picture.png "Alpha screenshot")
+![alt text](docs/1.1.0/window.png "Application Window")
+![alt text](docs/1.1.0/outline.png "Outline Panel")
+![alt text](docs/1.1.0/file_explorer.png "File Explorer")
 
 ### Features
 * Panning and zooming of node graph 
