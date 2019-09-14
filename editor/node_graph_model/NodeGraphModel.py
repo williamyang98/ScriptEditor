@@ -85,12 +85,20 @@ class NodeGraphModel(QtCore.QAbstractItemModel):
     def data(self, index, role):
         if not index.isValid():
             return None
-        
-        if role != QtCore.Qt.DisplayRole:
-            return None
-        
+
         item = index.internalPointer()
-        return item.getData(index.column())
+
+        if role == QtCore.Qt.DecorationRole and index.column() == 0:
+            icon = item.data.icon
+            if icon:
+                return QtGui.QPixmap(icon)
+            return None
+
+        if role == QtCore.Qt.DisplayRole and index.column() == 0:
+            item = index.internalPointer()
+            return item.data.description
+
+        return None
     
     def flags(self, index):
         if not index.isValid():
@@ -98,8 +106,9 @@ class NodeGraphModel(QtCore.QAbstractItemModel):
         return super().flags(index)
     
     def headerData(self, section, orientation, role):
-        if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
-            return self.rootItem.getData(section)
+        if orientation == QtCore.Qt.Horizontal:
+            if role == QtCore.Qt.DisplayRole:
+                return self.rootItem.data.description
         return None
 
 

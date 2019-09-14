@@ -1,18 +1,14 @@
-from .NodeDescriptions import NodeDescriptions
+from .NodeGraphData import NodeGraphData
+from .NodeData import NodeData
 
-descriptor = NodeDescriptions()
+descriptor = NodeGraphData()
 
 class NodeGraphItem:
-    def __init__(self, node, data=[], parent=None):
+    def __init__(self, node, data, parent=None):
         self.node = node
-        self.data = data 
+        self.data = data
         self.parent = parent
         self.children = []
-    
-    def getData(self, index):
-        if index < 0 or index >= len(self.data):
-            return None
-        return self.data[index]
     
     def addChild(self, child):
         self.children.append(child)
@@ -38,16 +34,16 @@ class NodeGraphItem:
     
     @property
     def columnCount(self):
-        return len(self.data) 
+        return 1 
     
 class BasicNodeGraphItem(NodeGraphItem):
     def __init__(self, node, parent=None):
-        super().__init__(node, [descriptor.getNodeDescription(node)], parent)
+        super().__init__(node, descriptor.getNodeData(node), parent)
         for child in node.children:
             self.addChild(BasicNodeGraphItem(child, self))
 
 class RootNodeGraphItem(NodeGraphItem):
     def __init__(self, labels):
-        super().__init__(None, data=["Outline"])
+        super().__init__(None, data=NodeData("Outline"))
         for label in labels:
             self.addChild(BasicNodeGraphItem(label, self))
