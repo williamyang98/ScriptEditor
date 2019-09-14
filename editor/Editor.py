@@ -2,16 +2,19 @@ from PySide2 import QtGui, QtCore, QtWidgets
 from .LabelsLoader import LabelsLoader
 from .graphview import GraphView
 from .FileExplorer import FileExplorer
+from .Outline import Outline
 
 class Editor:
     def __init__(self, rootPath="."):
+        self.loader = LabelsLoader()
+
         self.horizontalSplitter = QtWidgets.QSplitter()
         self.horizontalSplitter.setWindowTitle("Nodal editor")
 
         self.verticalSplitter = QtWidgets.QSplitter(QtCore.Qt.Vertical, self.horizontalSplitter)
 
         self.fileExplorer = FileExplorer(editor=self, parent=self.verticalSplitter, path=rootPath)
-        self.loader = LabelsLoader()
+        self.outline = Outline(editor=self, parent=self.verticalSplitter)
 
         self.graphView = GraphView(editor=self, parent=self.horizontalSplitter)
 
@@ -24,10 +27,10 @@ class Editor:
         labels = self.loader.loadFromFilepath(filepath)
         self.fileExplorer.updateFilepath(filepath)
         self.graphView.open(labels)
+        self.outline.setNodeGraph(self.graphView.nodeGraph)
 
     def findLabel(self, label, search=True):
-        nodeGraph = self.graphView.nodeGraph
-        view = nodeGraph.getView("label {0}".format(label))
+        view = self.graphView.getView("label {0}".format(label))
         if view is not None:
             self.graphView.focusItem(view)
             return
