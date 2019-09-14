@@ -97,7 +97,7 @@ class Renderer(Visitor):
 
     def visit_call(self, call):
         node = CallView(call, self.editor)
-        self.editor.addItem(node)
+        self.scene.addItem(node)
         self.nodeGraph.addView(node)
         return node
 

@@ -10,7 +10,8 @@ class GridOrganiser(Organiser):
     # organise nodes based on parameters
     def organise(self, nodeGraph):
         grid = []
-        self._populateGrid(grid, nodeGraph.root)
+        for label in nodeGraph.labels:
+            self._populateGrid(grid, label)
         self._organiseGrid(grid)
     
     def _populateGrid(self, grid, node, column=0):
@@ -18,11 +19,6 @@ class GridOrganiser(Organiser):
             grid.extend([[]]* (column-len(grid)+1))
 
         root = node.view
-        if root is None:
-            for child in node.children:
-                self._populateGrid(grid, child, column)
-            return
-
         current_column = grid[column]
         current_column.append(root)
 

@@ -8,9 +8,6 @@ class ViewGroup:
 
     @property
     def rootRect(self):
-        if self.root is None:
-            return QtCore.QRectF(0, 0, 0, 0)
-
         rect = QtCore.QRectF(
             self.root.boundingRect().x(),
             self.root.boundingRect().y(),
@@ -34,8 +31,7 @@ class ViewGroup:
     
     def translate(self, delta):
         self._boundingRect.translate(delta)
-        if self.root is not None:
-            self.root.setPos(self.root.pos()+delta)
+        self.root.setPos(self.root.pos()+delta)
         for child in self.children:
             child.translate(delta)
 

@@ -8,8 +8,21 @@ class TreeOrganiser(Organiser):
         self.y_padding = 50
     
     def organise(self, nodeGraph):
-        viewGroup = ViewGroup(nodeGraph.root)
-        self._organiseViewGroup(viewGroup)
+        viewGroups = [ViewGroup(label) for label in nodeGraph.labels]
+        for viewGroup in viewGroups:
+            self._organiseViewGroup(viewGroup)
+        height = sum((vg.boundingRect.height() for vg in viewGroups))
+        height += self.y_padding * (len(viewGroups)-1)
+        width = max((vg.boundingRect.width() for vg in viewGroups))
+
+        x_centre = width/2
+        y_centre = height/2
+
+        y = -y_centre 
+        x = 0
+        for viewGroup in viewGroups:
+            viewGroup.position = QtCore.QPointF(x-viewGroup.boundingRect.width()/2, y)
+            y += viewGroup.boundingRect.height() + self.y_padding
 
     # depth first search
     def _organiseViewGroup(self, group):

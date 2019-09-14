@@ -24,6 +24,7 @@ class GraphView:
             label.accept(renderer)
         self.nodeGraph = renderer.nodeGraph
         self.organise()
+        self.focusPosition(QtCore.QPointF(0, 0))
     
     def organise(self, organiser=None):
         if organiser is None:
