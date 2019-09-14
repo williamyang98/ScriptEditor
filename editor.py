@@ -15,6 +15,7 @@ def main():
         return 1
     
 
+    QtWidgets.QApplication.setStyle("fusion")
     app = QtWidgets.QApplication([]) 
     editor = Editor(args.dir)
     editor.show()
