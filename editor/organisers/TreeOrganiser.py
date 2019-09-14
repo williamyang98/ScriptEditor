@@ -27,7 +27,7 @@ class TreeOrganiser(Organiser):
         width = max((c.boundingRect.width() for c in group.children))
 
         y = group.rootRect.center().y() - height/2
-        x = group.rootRect.right() + self.x_padding
+        x = group.rootRect.right() + max([self.y_padding, height/10, group.rootRect.height()/10]) 
         for child in group.children:
             child.position = QtCore.QPointF(x, y)
             y += self.y_padding + child.boundingRect.height()
