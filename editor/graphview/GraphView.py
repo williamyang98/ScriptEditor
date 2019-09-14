@@ -9,7 +9,7 @@ class GraphView(QtWidgets.QWidget):
     def __init__(self, editor, parent):
         super().__init__(parent=parent)
         self.editor = editor
-        self.scene = QtWidgets.QGraphicsScene()
+        self.scene = QtWidgets.QGraphicsScene(self)
         self.camera = Camera(self.scene, self)
 
         self.organiser = TreeOrganiser()
