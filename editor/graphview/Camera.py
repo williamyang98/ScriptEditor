@@ -3,7 +3,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 INF_WIDTH  = 100000
 INF_HEIGHT = 200000
 
-class View(QtWidgets.QGraphicsView):
+class Camera(QtWidgets.QGraphicsView):
     def __init__(self, scene, parent):
         super().__init__(scene, parent)
         self._scale = 1.0
