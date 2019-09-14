@@ -21,9 +21,9 @@ Files can also be inspected in the node editor from the file explorer as well. T
 * Loading multiple files at once into the editor
 * Can represent dialogue, conditionals, menus, and jump/call directives
 * Can export the entire graph model as JSON
+* Have an outline of panel for each node graph for faster navigation
 
 ### Roadmap
-* Have an outline of panel for each node graph for faster navigation
 * Show jump/call directives associated for each label to see what uses the label
 * Add support for Renpy screens
 * Integrate an editor so that the Renpy script can be created using a node graph
