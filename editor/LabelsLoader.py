@@ -15,7 +15,7 @@ class LabelsLoader:
         self.label_filepaths.setdefault(label.name, filepath)
         labels = self.explored_filepaths.setdefault(filepath, [])
         if label not in labels: 
-            label.append(label)
+            labels.append(label)
     
     def getLabel(self, name):
         return self.labels.get(name)

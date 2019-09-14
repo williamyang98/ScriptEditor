@@ -5,13 +5,15 @@ from .FileExplorer import FileExplorer
 
 class Editor:
     def __init__(self, rootPath="."):
-        self.splitter = QtWidgets.QSplitter()
-        self.splitter.setWindowTitle("Nodal editor")
+        self.horizontalSplitter = QtWidgets.QSplitter()
+        self.horizontalSplitter.setWindowTitle("Nodal editor")
 
-        self.fileExplorer = FileExplorer(editor=self, parent=self.splitter, path=rootPath)
+        self.verticalSplitter = QtWidgets.QSplitter(QtCore.Qt.Vertical, self.horizontalSplitter)
+
+        self.fileExplorer = FileExplorer(editor=self, parent=self.verticalSplitter, path=rootPath)
         self.loader = LabelsLoader()
 
-        self.graphView = GraphView(editor=self, parent=self.splitter)
+        self.graphView = GraphView(editor=self, parent=self.horizontalSplitter)
 
         self.cacheFile(rootPath)
 
@@ -22,11 +24,23 @@ class Editor:
         labels = self.loader.loadFromFilepath(filepath)
         self.graphView.open(labels)
 
-    def findLabel(self, label):
-        pass
+    def findLabel(self, label, search=True):
+        nodeGraph = self.graphView.nodeGraph
+        view = nodeGraph.getView("label {0}".format(label))
+        if view is not None:
+            self.graphView.focusItem(view)
+            return
 
+        if not search:
+            return
+
+        filepath = self.loader.getLabelFilepath(label)
+        if filepath is not None:
+            self.openFile(filepath)
+            self.findLabel(label, search=False)
+    
     def findNode(self, node):
         self.graphView.focusItem(node)
     
     def show(self):
-        self.splitter.show()
+        self.horizontalSplitter.show()

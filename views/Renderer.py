@@ -26,7 +26,7 @@ class Renderer(Visitor):
     def visit_condition_block(self, block):
         node = ConditionView(block, self.editor)
         self.scene.addItem(node)
-        self.nodeGraph.addView(node)
+        self.nodeGraph.addViewModel(node, block)
 
         with self.nodeGraph:
             child = block.if_condition.accept(self)
@@ -61,7 +61,7 @@ class Renderer(Visitor):
     def visit_context(self, context):
         node = ContextView(context, self.editor) 
         self.scene.addItem(node)
-        self.nodeGraph.addView(node)
+        self.nodeGraph.addViewModel(node, context)
         with self.nodeGraph:
             for content in context.contents:
                 if isinstance(content, str):
@@ -78,7 +78,7 @@ class Renderer(Visitor):
     def visit_label(self, label):
         node = LabelView(label, self.editor) 
         self.scene.addItem(node)
-        self.nodeGraph.addView(node)
+        self.nodeGraph.addViewModel(node, label)
         with self.nodeGraph:
             context = label.context.accept(self)
 
@@ -92,13 +92,13 @@ class Renderer(Visitor):
     def visit_jump(self, jump):
         node = JumpView(jump, self.editor)
         self.scene.addItem(node)
-        self.nodeGraph.addView(node)
+        self.nodeGraph.addViewModel(node, jump)
         return node
 
     def visit_call(self, call):
         node = CallView(call, self.editor)
         self.scene.addItem(node)
-        self.nodeGraph.addView(node)
+        self.nodeGraph.addViewModel(node, call)
         return node
 
     def visit_script(self, script):
@@ -111,7 +111,7 @@ class Renderer(Visitor):
     def visit_menu(self, menu):
         node = MenuView(menu, self.editor)
         self.scene.addItem(node)
-        self.nodeGraph.addView(node)
+        self.nodeGraph.addViewModel(node, menu)
         with self.nodeGraph:
             for choice in menu.choices:
                 child = choice.accept(self)
