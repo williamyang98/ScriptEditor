@@ -1,5 +1,6 @@
 from PySide2 import QtGui, QtCore, QtWidgets
 from .Camera import Camera
+from .NodeTracker import NodeTracker
 
 from views import NodeGraph, Renderer
 from editor.organisers import TreeOrganiser, GridOrganiser
@@ -12,9 +13,11 @@ class GraphView:
 
         self.organiser = TreeOrganiser()
         self.nodeGraph = NodeGraph()
+        self.nodeTracker = NodeTracker(self.nodeGraph)
     
     def clear(self):
         self.nodeGraph = NodeGraph()
+        self.nodeTracker = NodeTracker(self.nodeGraph)
         self.scene.clear()
     
     def open(self, labels=[]):
@@ -23,6 +26,7 @@ class GraphView:
         for label in labels:
             label.accept(renderer)
         self.nodeGraph = renderer.nodeGraph
+        self.nodeTracker = NodeTracker(self.nodeGraph)
         self.organise()
         self.focusPosition(QtCore.QPointF(0, 0))
     
@@ -31,6 +35,8 @@ class GraphView:
             organiser = self.organiser
         organiser.organise(self.nodeGraph)
 
+    def getView(self, id):
+        return self.nodeTracker.getView(id)
 
     def focusItem(self, item):
         pos = item.mapToScene(item.boundingRect().center())
