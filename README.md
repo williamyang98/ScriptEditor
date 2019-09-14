@@ -11,11 +11,6 @@ Another feature is linking between different labels in your script. Renpy script
 at the label. By doubling clicking on a jump or call node, you will be taken to the corresponding label node, whether it be in the same file or different file.
 Files can also be inspected in the node editor from the file explorer as well. This way, you can easily map out the flow and branches of your story in a visually intuitive manner.
 
-### Gallery
-![alt text](docs/1.1.0/window.png "Application Window")
-![alt text](docs/1.1.0/outline.png "Outline Panel")
-![alt text](docs/1.1.0/file_explorer.png "File Explorer")
-
 ### Features
 * Panning and zooming of node graph 
 * Inspecting files from a file explorer
@@ -33,6 +28,16 @@ Files can also be inspected in the node editor from the file explorer as well. T
 ### Requirements
 * python 3 and above
 * PySide2 or any Qt5 binding
+
+### Gallery
+#### Application
+![alt text](docs/1.1.0/window.png "Application Window")
+
+#### Outline panel
+![alt text](docs/1.1.0/outline.png "Outline Panel")
+
+#### File explorer
+![alt text](docs/1.1.0/file_explorer.png "File Explorer")
 
 
 
