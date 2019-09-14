@@ -11,6 +11,9 @@ class FileExplorer:
         self.tree_view = QtWidgets.QTreeView(parent=parent)
         self.tree_view.setModel(self.model)
         self.tree_view.setRootIndex(self.model.index(path))
+        self.tree_view.hideColumn(1)
+        self.tree_view.hideColumn(2)
+        self.tree_view.hideColumn(3)
 
         self.tree_view.clicked.connect(self._onClick)
     
