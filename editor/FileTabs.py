@@ -18,7 +18,8 @@ class FileTabs(QtWidgets.QTabWidget):
     def openLabels(self, labels, filepath):
         filepath = os.path.normpath(filepath)
         if filepath in self.openedFiles:
-            index = self.openedFiles.get(filepath)
+            widget = self.openedFiles.get(filepath)
+            index = self.tabs.indexOf(widget)
             self.tabs.setCurrentIndex(index)
             return
 
@@ -26,7 +27,7 @@ class FileTabs(QtWidgets.QTabWidget):
         graphView.open(labels)
         title = os.path.basename(filepath)
         index = self.tabs.addTab(graphView, title)
-        self.openedFiles.setdefault(filepath, index)
+        self.openedFiles.setdefault(filepath, graphView)
         self.tabs.setCurrentIndex(index)
     
     def getCurrentGraphScene(self):
@@ -38,10 +39,11 @@ class FileTabs(QtWidgets.QTabWidget):
         self.editor.updateGraphScene()
     
     def _onTabClose(self, index):
+        widget = self.tabs.widget(index)
         self.tabs.removeTab(index)
         key = None
-        for _key, _index in self.openedFiles.items():
-            if _index == index:
+        for _key, _widget in self.openedFiles.items():
+            if _widget == widget:
                 key = _key
                 break
         if key is not None:
