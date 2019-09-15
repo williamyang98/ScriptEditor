@@ -14,9 +14,9 @@ class BaseParser(Parser):
         self.label = None
         self.child = None
 
-    def parse_line(self, indent, line_number, line):
+    def parse_line(self, indent, line_number, line, filepath):
         if self.child:
-            self.child.parse_line(indent, line_number, line)
+            self.child.parse_line(indent, line_number, line, filepath)
             # if child still active
             if self.child:
                 return
@@ -28,8 +28,8 @@ class BaseParser(Parser):
         match = regex_label.match(line)
         if match:
             label = match["label"]
-            self.child = ContextParser(self)
-            self.label = Label(label)
+            self.child = ContextParser(self, filepath=filepath, line_number=line_number)
+            self.label = Label(label, filepath=filepath, line_number=line_number)
     
     def close(self):
         if self.child:

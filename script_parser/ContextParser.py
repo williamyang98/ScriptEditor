@@ -1,6 +1,6 @@
 import re
 
-from models import Context, Jump, Call, Script
+from models import Context, Jump, Call, Script, Text
 from .Parser import Parser
 from .ConditionParser import ConditionParser
 from .MenuParser import MenuParser
@@ -14,18 +14,18 @@ regex_script = re.compile(r"\$\s*(?P<script>.+)")
 regex_python_block = re.compile(r"python:")
 
 class ContextParser(Parser):
-    def __init__(self, parent):
+    def __init__(self, parent, filepath, line_number):
         self.parent = parent
-        self._model = Context()
+        self._model = Context(filepath=filepath, line_number=line_number)
         self.indent = None
         self.child = None
     
-    def parse_line(self, indent, line_number, line):
+    def parse_line(self, indent, line_number, line, filepath):
         if self.indent is None:
             self.indent = indent
 
         if self.child is not None:
-            self.child.parse_line(indent, line_number, line)
+            self.child.parse_line(indent, line_number, line, filepath)
             if self.child:
                 return
         
@@ -37,44 +37,44 @@ class ContextParser(Parser):
         match = regex_jump.match(line)
         if match:
             label = match["label"]
-            jump = Jump(label)
+            jump = Jump(label, filepath=filepath, line_number=line_number)
             self._model.add_content(jump)
             return
         
         match = regex_call.match(line)
         if match:
             label = match["label"]
-            call = Call(label)
+            call = Call(label, filepath=filepath, line_number=line_number)
             self._model.add_content(call)
             return
         
         match = regex_script.match(line)
         if match:
             script_code = match["script"]
-            script = Script(script_code)
+            script = Script(script_code, filepath=filepath, line_number=line_number)
             self._model.add_content(script)
             return
         
         match = regex_condition.match(line)
         if match:
-            parser = ConditionParser(self)
-            parser.parse_line(indent, line_number, line)
+            parser = ConditionParser(self, filepath=filepath, line_number=line_number)
+            parser.parse_line(indent, line_number, line, filepath)
             self.child = parser
             return
         
         match = regex_menu.match(line)
         if match:
-            parser = MenuParser(self)
+            parser = MenuParser(self, filepath=filepath, line_number=line_number)
             self.child = parser
             return
         
         match = regex_python_block.match(line)
         if match:
-            parser = PythonScriptParser(self)
+            parser = PythonScriptParser(self, filepath=filepath, line_number=line_number)
             self.child = parser 
             return
         
-        self._model.add_content(line)
+        self._model.add_content(Text(line, filepath=filepath, line_number=line_number))
 
     def close(self):
         if self.child:

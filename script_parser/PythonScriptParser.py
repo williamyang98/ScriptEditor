@@ -1,13 +1,13 @@
 from .Parser import Parser
-from models import PythonScript
+from models import PythonScript, Text
 
 class PythonScriptParser(Parser):
-    def __init__(self, parent):
+    def __init__(self, parent, filepath, line_number):
         self.parent = parent
-        self._model = PythonScript()
+        self._model = PythonScript(filepath=filepath, line_number=line_number)
         self.indent = None
 
-    def parse_line(self, indent, line_number, line):
+    def parse_line(self, indent, line_number, line, filepath):
         if self.indent is None:
             self.indent = indent
         
@@ -15,7 +15,7 @@ class PythonScriptParser(Parser):
             self.close()
             return
         
-        self._model.add_line(line)
+        self._model.add_line(Text(line, filepath=filepath, line_number=line_number))
 
     def close(self):
         self.parent.on_child_close()

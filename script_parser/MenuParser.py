@@ -7,20 +7,20 @@ regex_description = re.compile(r"\"(?P<description>.+)\"")
 regex_choice = re.compile(r"(?P<choice>.+):")
 
 class MenuParser(Parser):
-    def __init__(self, parent):
+    def __init__(self, parent, filepath, line_number):
         self.parent = parent
-        self._model = Menu()
+        self._model = Menu(filepath=filepath, line_number=line_number)
         self.indent = None
 
         self.child = None
         self.choice = None
 
-    def parse_line(self, indent, line_number, line):
+    def parse_line(self, indent, line_number, line, filepath):
         if self.indent is None:
             self.indent = indent
 
         if self.child:
-            self.child.parse_line(indent, line_number, line)
+            self.child.parse_line(indent, line_number, line, filepath)
             if self.child:
                 return
         
@@ -28,11 +28,11 @@ class MenuParser(Parser):
             self.close()
             return
 
-        self.parse_choice(indent, line_number, line) or \
-        self.parse_description(indent, line_number, line)
+        self.parse_choice(indent, line_number, line, filepath) or \
+        self.parse_description(indent, line_number, line, filepath)
         
             
-    def parse_description(self, indent, line_number, line):
+    def parse_description(self, indent, line_number, line, filepath):
         match = regex_description.match(line)
         if match:
             description = match["description"]
@@ -40,15 +40,15 @@ class MenuParser(Parser):
             return True
         return False
 
-    def parse_choice(self, indent, line_number, line):
+    def parse_choice(self, indent, line_number, line, filepath):
         from .ContextParser import ContextParser
         match = regex_choice.match(line)
         if match:
             description = match["choice"]
-            choice = Choice(description)
+            choice = Choice(description, filepath=filepath, line_number=line_number)
             self.choice = choice
             self._model.add_choice(choice)
-            self.child = ContextParser(self)
+            self.child = ContextParser(self, filepath=filepath, line_number=line_number)
             return True
         return False
     
