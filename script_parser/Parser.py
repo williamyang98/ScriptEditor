@@ -2,16 +2,13 @@ from abc import abstractmethod, abstractproperty, ABC
 
 class Parser(ABC):
     @abstractmethod
-    def parse_line(self, metadata):
-        raise NotImplementedError()
+    def parse_metadata(self, metadata, stack):
+        pass
     
     @abstractmethod
-    def close(self):
-        raise NotImplementedError()
+    def on_child_pop(self, child):
+        pass
 
-    @abstractmethod
-    def on_child_close(self):
-        raise NotImplementedError()
-
+    @abstractproperty
     def model(self):
-        raise NotImplementedError()
+        pass

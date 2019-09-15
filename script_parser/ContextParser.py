@@ -15,78 +15,67 @@ regex_python_block = re.compile(r"python:")
 
 class ContextParser(Parser):
     def __init__(self, parent, metadata):
-        self.parent = parent
-        self._model = Context(metadata)
+        self.context = Context(metadata)
         self.indent = None
-        self.child = None
     
-    def parse_line(self, metadata):
+    def parse_metadata(self, metadata, stack):
         if self.indent is None:
             self.indent = metadata.indent
 
-        if self.child is not None:
-            self.child.parse_line(metadata)
-            if self.child:
-                return
-        
         if metadata.indent < self.indent:
-            self.close()
+            self.close(metadata, stack)
             return
-
 
         match = regex_jump.match(metadata.line)
         if match:
             label = match["label"]
             jump = Jump(label, metadata)
-            self._model.add_child(jump)
+            self.context.add_child(jump)
             return
         
         match = regex_call.match(metadata.line)
         if match:
             label = match["label"]
             call = Call(label, metadata)
-            self._model.add_child(call)
+            self.context.add_child(call)
             return
         
         match = regex_script.match(metadata.line)
         if match:
             script_code = match["script"]
             script = Script(script_code, metadata)
-            self._model.add_child(script)
+            self.context.add_child(script)
             return
         
         match = regex_condition.match(metadata.line)
         if match:
             parser = ConditionParser(self, metadata)
-            parser.parse_line(metadata)
-            self.child = parser
+            stack.push(parser)
+            stack.parse_metadata(metadata)
             return
         
         match = regex_menu.match(metadata.line)
         if match:
             parser = MenuParser(self, metadata)
-            self.child = parser
+            stack.push(parser)
             return
         
         match = regex_python_block.match(metadata.line)
         if match:
             parser = PythonScriptParser(self, metadata)
-            self.child = parser 
+            stack.push(parser)
             return
         
-        self._model.add_child(Text(metadata.line, metadata))
+        self.context.add_child(Text(metadata.line, metadata))
 
-    def close(self):
-        if self.child:
-            self.child.close()
-        self.parent.on_child_close()
+    def close(self, metadata, stack):
+        stack.pop()
+        stack.parse_metadata(metadata)
     
-    def on_child_close(self):
-        sub_model = self.child.model
-        self._model.add_child(sub_model)
-        self.child = None
+    def on_child_pop(self, child):
+        self.context.add_child(child.model)
 
     @property
     def model(self):
-        return self._model
+        return self.context
     

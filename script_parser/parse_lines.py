@@ -1,6 +1,6 @@
 from models import MetaData
 
-from .BaseParser import BaseParser 
+from .ParserStack import ParserStack
 from .ParseException import ParseException, FileParseException
 
 def parse_lines(filepath):
@@ -10,7 +10,7 @@ def parse_lines(filepath):
         return []
 
 def parse_filepath(filepath):
-    parser = BaseParser()
+    parser = ParserStack()
     with open(filepath, "r", encoding="utf8") as fp:
         for line_number, line in enumerate(fp.readlines()):
             trimmed_line = line.lstrip()
@@ -24,10 +24,11 @@ def parse_filepath(filepath):
 
             try:
                 metadata = MetaData(indent, line_number, filepath, trimmed_line)
-                parser.parse_line(metadata)
+                parser.parse_metadata(metadata)
             except ParseException as ex:
                 pass
                 # raise FileParseException(indent, line_number, line, str(ex))
-        
-        parser.close()
-    return parser.model
+
+    parser.collapse()
+    labels = parser.base.labels
+    return labels

@@ -9,66 +9,55 @@ regex_choice = re.compile(r"(?P<choice>.+):")
 class MenuParser(Parser):
     def __init__(self, parent, metadata):
         self.parent = parent
-        self._model = Menu(metadata)
+        self.menu = Menu(metadata)
         self.indent = None
 
-        self.child = None
         self.choice = None
 
-    def parse_line(self, metadata):
+    def parse_metadata(self, metadata, stack):
         if self.indent is None:
             self.indent = metadata.indent
 
-        if self.child:
-            self.child.parse_line(metadata)
-            if self.child:
-                return
-        
         if metadata.indent < self.indent:
-            self.close()
+            self.close(metadata, stack)
             return
 
-        self.parse_choice(metadata) or \
-        self.parse_description(metadata)
+        self.parse_choice(metadata, stack) or \
+        self.parse_description(metadata, stack)
         
             
-    def parse_description(self, metadata):
+    def parse_description(self, metadata, stack):
         match = regex_description.match(metadata.line)
         if match:
             description = match["description"]
-            self._model.description = description
+            self.menu.description = description
             return True
         return False
 
-    def parse_choice(self, metadata):
+    def parse_choice(self, metadata, stack):
         from .ContextParser import ContextParser
         match = regex_choice.match(metadata.line)
         if match:
             description = match["choice"]
             choice = Choice(description, metadata)
             self.choice = choice
-            self._model.add_choice(choice)
-            self.child = ContextParser(self, metadata)
+            self.menu.add_choice(choice)
+            parser = ContextParser(self, metadata)
+            stack.push(parser)
             return True
         return False
     
-    def close(self):
-        if self.child:
-            self.child.close()
-        self.parent.on_child_close()
-        
+    def close(self, metadata, stack):
+        stack.pop()
+        stack.parse_metadata(metadata)
     
-    def on_child_close(self):
-        sub_model = self.child.model
-        self.choice.context = sub_model
-        sub_model.parent = self.choice
+    def on_child_pop(self, child):
+        self.choice.context = child.model
         self.choice = None
-        self.child = None
-
 
     @property
     def model(self):
-        return self._model
+        return self.menu
             
 
 
