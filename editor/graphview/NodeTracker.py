@@ -2,21 +2,7 @@ from models import Visitor
 
 # get an id for each possible model for tracker
 class NodeTracker(Visitor):
-    def __init__(self, nodeGraph):
-        self.tracked_views = {}
-        for label in nodeGraph.labels:
-            self._trackNode(label)
-
-    def _trackNode(self, node):
-        id = node.model.accept(self)
-        if id is not None:
-            self.tracked_views.setdefault(id, node.view)
-        for child in node.children:
-            self._trackNode(child)
-
-    def getView(self, id):
-        return self.tracked_views.get(id)
-
+    # condition block
     def visit_condition_block(self, block):
         pass
 
