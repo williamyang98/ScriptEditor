@@ -3,7 +3,7 @@ from PySide2 import QtCore
 from models import Visitor
 
 from .ConditionView import ConditionView
-from .ContextView import ContextView
+from .context_view import ContextView
 from .LabelView import LabelView
 from .MenuView import MenuView
 from .JumpView import JumpView

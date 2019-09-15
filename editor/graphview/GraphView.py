@@ -1,9 +1,9 @@
 from PySide2 import QtGui, QtCore, QtWidgets
 from .Camera import Camera
-from .NodeTracker import NodeTracker
 
 from views import NodeGraph, Renderer
 from editor.organisers import TreeOrganiser, GridOrganiser
+from editor import NodeTracker
 
 class GraphView(Camera):
     def __init__(self, editor, parent):
