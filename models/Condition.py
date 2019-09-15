@@ -1,8 +1,8 @@
 from .Node import Node
 
 class ConditionBlock(Node):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, metadata):
+        super().__init__(metadata)
         self.if_condition = None
         self.elif_conditions = []
         self.else_condition = None
@@ -25,8 +25,8 @@ class ConditionBlock(Node):
         return visitor.visit_condition_block(self)
 
 class IfCondition(Node):
-    def __init__(self, script, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, script, metadata):
+        super().__init__(metadata)
         self.script = script
         self.context = None
     
@@ -40,8 +40,8 @@ class IfCondition(Node):
         return visitor.visit_if_condition(self)
     
 class ElifCondition(Node):
-    def __init__(self, script, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, script, metadata):
+        super().__init__(metadata)
         self.script = script
         self.context = None
     
@@ -55,8 +55,8 @@ class ElifCondition(Node):
         return visitor.visit_elif_condition(self)
 
 class ElseCondition(Node):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, metadata):
+        super().__init__(metadata)
         self.context = None
 
     @property

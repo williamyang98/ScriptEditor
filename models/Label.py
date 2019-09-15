@@ -1,8 +1,8 @@
 from .Node import Node
 
 class Label(Node):
-    def __init__(self, name, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, name, metadata):
+        super().__init__(metadata)
         self.name = name
         self.context = None
 

@@ -1,8 +1,8 @@
 from .Node import Node
 
 class Text(Node):
-    def __init__(self, text, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, text, metadata):
+        super().__init__(metadata)
         self.text = text
 
     def accept(self, visitor):

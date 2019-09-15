@@ -1,8 +1,8 @@
 from .Node import Node
 
 class Menu(Node):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, metadata):
+        super().__init__(metadata)
         self.description = None
         self.choices = []
     
@@ -20,8 +20,8 @@ class Menu(Node):
         return "menu"
 
 class Choice(Node):
-    def __init__(self, description, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, description, metadata):
+        super().__init__(metadata)
         self.description = description
         self.context = None
     

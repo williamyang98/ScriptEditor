@@ -1,8 +1,8 @@
 from .Node import Node
 
 class Context(Node):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, metadata):
+        super().__init__(metadata)
         self._children = []
 
     @property
@@ -16,24 +16,24 @@ class Context(Node):
         return visitor.visit_context(self)
 
 class Jump(Node):
-    def __init__(self, label, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, label, metadata):
+        super().__init__(metadata)
         self.label = label
     
     def accept(self, visitor):
         return visitor.visit_jump(self)
 
 class Call(Node):
-    def __init__(self, label, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, label, metadata):
+        super().__init__(metadata)
         self.label = label
     
     def accept(self, visitor):
         return visitor.visit_call(self)
 
 class Script(Node):
-    def __init__(self, script, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, script, metadata):
+        super().__init__(metadata)
         self.script = script
     
     def accept(self, visitor):
@@ -43,8 +43,8 @@ class Script(Node):
         return "SCRIPT {0}".format(self.script)
     
 class PythonScript(Node):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, metadata):
+        super().__init__(metadata)
         self.lines = []
     
     def add_line(self, line):
