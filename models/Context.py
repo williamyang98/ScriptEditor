@@ -1,9 +1,13 @@
-from .Visitable import Visitable
+from .Node import Node
 
-class Context(Visitable):
-    def __init__(self):
-        self.parent = None
+class Context(Node):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.contents = []
+
+    @property
+    def children(self):
+        return self.contents
     
     def add_content(self, content):
         self.contents.append(content)
@@ -11,28 +15,25 @@ class Context(Visitable):
     def accept(self, visitor):
         return visitor.visit_context(self)
 
-class Jump(Visitable):
-    def __init__(self, label):
+class Jump(Node):
+    def __init__(self, label, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.label = label
     
     def accept(self, visitor):
         return visitor.visit_jump(self)
-    
-    def __str__(self):
-        return "jump"
 
-class Call(Visitable):
-    def __init__(self, label):
+class Call(Node):
+    def __init__(self, label, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.label = label
     
     def accept(self, visitor):
         return visitor.visit_call(self)
-    
-    def __str__(self):
-        return "call"
 
-class Script(Visitable):
-    def __init__(self, script):
+class Script(Node):
+    def __init__(self, script, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.script = script
     
     def accept(self, visitor):
@@ -41,8 +42,9 @@ class Script(Visitable):
     def __str__(self):
         return "SCRIPT {0}".format(self.script)
     
-class PythonScript(Visitable):
-    def __init__(self):
+class PythonScript(Node):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.lines = []
     
     def add_line(self, line):
