@@ -69,4 +69,4 @@ class Editor:
         self.breadcrumb.focusView(node)
     
     def show(self):
-        self.horizontalSplitter.show()
+        self.horizontalSplitter.showMaximized()
