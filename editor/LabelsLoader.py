@@ -1,6 +1,6 @@
 import os
 import json
-from script_parser import parse_lines
+from script_parser import parse_file
 from models import JSONSerialiser
 
 from .NodeTracker import NodeTracker
@@ -39,7 +39,7 @@ class LabelsLoader:
         if filepath in self.explored_filepaths:
             return self.explored_filepaths.get(filepath)
 
-        labels = parse_lines(filepath)
+        labels = parse_file(filepath)
 
         for label in labels:
             self._trackNode(label, filepath)

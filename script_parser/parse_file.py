@@ -3,14 +3,23 @@ from models import MetaData
 from .ParserStack import ParserStack
 from .ParseException import ParseException, FileParseException
 
-def parse_lines(filepath):
-    try:
-        return parse_filepath(filepath)
-    except UnicodeDecodeError as ex:
-        return []
-
-def parse_filepath(filepath):
+def parse_file(filepath):
     parser = ParserStack()
+
+    try:
+        for metadata in get_metadata(filepath):
+            try:
+                parser.parse_metadata(metadata)
+            except ParseException as ex:
+                pass
+    except UnicodeDecodeError as ex:
+        pass
+
+    parser.collapse()
+    labels = parser.labels
+    return labels
+
+def get_metadata(filepath):
     with open(filepath, "r", encoding="utf8") as fp:
         for line_number, line in enumerate(fp.readlines()):
             trimmed_line = line.lstrip()
@@ -21,14 +30,6 @@ def parse_filepath(filepath):
                 
             if trimmed_line[0] == '#':
                 continue
-
-            try:
-                metadata = MetaData(indent, line_number, filepath, trimmed_line)
-                parser.parse_metadata(metadata)
-            except ParseException as ex:
-                pass
-                # raise FileParseException(indent, line_number, line, str(ex))
-
-    parser.collapse()
-    labels = parser.base.labels
-    return labels
+                
+            metadata = MetaData(indent, line_number, filepath, trimmed_line)
+            yield metadata

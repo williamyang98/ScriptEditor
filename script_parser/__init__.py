@@ -1,1 +1,1 @@
-from .parse_lines import parse_lines
+from .parse_file import parse_file

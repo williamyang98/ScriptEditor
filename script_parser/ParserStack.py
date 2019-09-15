@@ -21,6 +21,10 @@ class ParserStack:
         while len(self.stack) > 0:
             self.pop()
     
+    @property
+    def labels(self):
+        return self.base.labels
+    
     def get_top(self):
         if len(self.stack) > 0:
             return self.stack[-1]
