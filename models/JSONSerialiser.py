@@ -31,13 +31,9 @@ class JSONSerialiser(Visitor):
     def visit_context(self, context):
         data = {}
         data["type"] = "context"
-        data["content"] = []
-        for content in context.contents:
-            if isinstance(content, str):
-                data["content"].append(content)
-                continue
-
-            data["content"].append(content.accept(self))
+        data["children"] = []
+        for child in context.children:
+            data["children"].append(child.accept(self))
         return data
 
     # renpy directives

@@ -3,14 +3,14 @@ from .Node import Node
 class Context(Node):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.contents = []
+        self._children = []
 
     @property
     def children(self):
-        return self.contents
+        return self._children
     
-    def add_content(self, content):
-        self.contents.append(content)
+    def add_child(self, child):
+        self._children.append(child)
 
     def accept(self, visitor):
         return visitor.visit_context(self)

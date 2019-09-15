@@ -20,17 +20,17 @@ class ContextView(Body):
     
     def _createEntries(self):
         self._entries = []
-        for content in self._context.contents:
-            data = content.accept(descriptor)
+        for child in self._context.children:
+            data = child.accept(descriptor)
             if data is None:
                 continue
 
             if data.text:
-                self._entries.append((data.text, content))
+                self._entries.append((data.text, child))
 
             if data.hasSocket: 
                 socket = Socket(self)
-                self.addSocket(content, socket)
+                self.addSocket(child, socket)
     
     @property
     def entries(self):

@@ -38,21 +38,21 @@ class ContextParser(Parser):
         if match:
             label = match["label"]
             jump = Jump(label, metadata)
-            self._model.add_content(jump)
+            self._model.add_child(jump)
             return
         
         match = regex_call.match(metadata.line)
         if match:
             label = match["label"]
             call = Call(label, metadata)
-            self._model.add_content(call)
+            self._model.add_child(call)
             return
         
         match = regex_script.match(metadata.line)
         if match:
             script_code = match["script"]
             script = Script(script_code, metadata)
-            self._model.add_content(script)
+            self._model.add_child(script)
             return
         
         match = regex_condition.match(metadata.line)
@@ -74,7 +74,7 @@ class ContextParser(Parser):
             self.child = parser 
             return
         
-        self._model.add_content(Text(metadata.line, metadata))
+        self._model.add_child(Text(metadata.line, metadata))
 
     def close(self):
         if self.child:
@@ -83,7 +83,7 @@ class ContextParser(Parser):
     
     def on_child_close(self):
         sub_model = self.child.model
-        self._model.add_content(sub_model)
+        self._model.add_child(sub_model)
         self.child = None
 
     @property
