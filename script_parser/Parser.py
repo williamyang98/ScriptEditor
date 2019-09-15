@@ -2,7 +2,7 @@ from abc import abstractmethod, abstractproperty, ABC
 
 class Parser(ABC):
     @abstractmethod
-    def parse_line(self, indent, line_number, line, filepath):
+    def parse_line(self, metadata):
         raise NotImplementedError()
     
     @abstractmethod

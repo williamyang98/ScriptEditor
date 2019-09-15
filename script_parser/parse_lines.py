@@ -1,3 +1,5 @@
+from models import MetaData
+
 from .BaseParser import BaseParser 
 from .ParseException import ParseException, FileParseException
 
@@ -5,8 +7,6 @@ def parse_lines(filepath):
     try:
         return parse_filepath(filepath)
     except UnicodeDecodeError as ex:
-        return []
-    except Exception as ex:
         return []
 
 def parse_filepath(filepath):
@@ -23,7 +23,8 @@ def parse_filepath(filepath):
                 continue
 
             try:
-                parser.parse_line(indent, line_number, trimmed_line, filepath)
+                metadata = MetaData(indent, line_number, filepath, trimmed_line)
+                parser.parse_line(metadata)
             except ParseException as ex:
                 pass
                 # raise FileParseException(indent, line_number, line, str(ex))

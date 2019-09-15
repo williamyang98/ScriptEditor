@@ -14,67 +14,67 @@ regex_script = re.compile(r"\$\s*(?P<script>.+)")
 regex_python_block = re.compile(r"python:")
 
 class ContextParser(Parser):
-    def __init__(self, parent, filepath, line_number):
+    def __init__(self, parent, metadata):
         self.parent = parent
-        self._model = Context(filepath=filepath, line_number=line_number)
+        self._model = Context(metadata)
         self.indent = None
         self.child = None
     
-    def parse_line(self, indent, line_number, line, filepath):
+    def parse_line(self, metadata):
         if self.indent is None:
-            self.indent = indent
+            self.indent = metadata.indent
 
         if self.child is not None:
-            self.child.parse_line(indent, line_number, line, filepath)
+            self.child.parse_line(metadata)
             if self.child:
                 return
         
-        if indent < self.indent:
+        if metadata.indent < self.indent:
             self.close()
             return
 
 
-        match = regex_jump.match(line)
+        match = regex_jump.match(metadata.line)
         if match:
             label = match["label"]
-            jump = Jump(label, filepath=filepath, line_number=line_number)
+            jump = Jump(label, metadata)
             self._model.add_content(jump)
             return
         
-        match = regex_call.match(line)
+        match = regex_call.match(metadata.line)
         if match:
             label = match["label"]
-            call = Call(label, filepath=filepath, line_number=line_number)
+            call = Call(label, metadata)
             self._model.add_content(call)
             return
         
-        match = regex_script.match(line)
+        match = regex_script.match(metadata.line)
         if match:
             script_code = match["script"]
-            script = Script(script_code, filepath=filepath, line_number=line_number)
+            script = Script(script_code, metadata)
             self._model.add_content(script)
             return
         
-        match = regex_condition.match(line)
+        match = regex_condition.match(metadata.line)
         if match:
-            parser = ConditionParser(self, filepath=filepath, line_number=line_number)
-            parser.parse_line(indent, line_number, line, filepath)
+            parser = ConditionParser(self, metadata)
+            parser.parse_line(metadata)
             self.child = parser
             return
         
-        match = regex_menu.match(line)
+        match = regex_menu.match(metadata.line)
         if match:
-            parser = MenuParser(self, filepath=filepath, line_number=line_number)
+            parser = MenuParser(self, metadata)
             self.child = parser
             return
         
-        match = regex_python_block.match(line)
+        match = regex_python_block.match(metadata.line)
         if match:
-            parser = PythonScriptParser(self, filepath=filepath, line_number=line_number)
+            parser = PythonScriptParser(self, metadata)
             self.child = parser 
             return
         
-        self._model.add_content(Text(line, filepath=filepath, line_number=line_number))
+        self._model.add_content(Text(metadata.line, metadata))
 
     def close(self):
         if self.child:

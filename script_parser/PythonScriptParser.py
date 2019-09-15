@@ -2,20 +2,20 @@ from .Parser import Parser
 from models import PythonScript, Text
 
 class PythonScriptParser(Parser):
-    def __init__(self, parent, filepath, line_number):
+    def __init__(self, parent, metadata):
         self.parent = parent
-        self._model = PythonScript(filepath=filepath, line_number=line_number)
+        self._model = PythonScript(metadata)
         self.indent = None
 
-    def parse_line(self, indent, line_number, line, filepath):
+    def parse_line(self, metadata):
         if self.indent is None:
-            self.indent = indent
+            self.indent = metadata.indent
         
-        if indent < self.indent:
+        if metadata.indent < self.indent:
             self.close()
             return
         
-        self._model.add_line(Text(line, filepath=filepath, line_number=line_number))
+        self._model.add_line(Text(metadata.line, metadata))
 
     def close(self):
         self.parent.on_child_close()

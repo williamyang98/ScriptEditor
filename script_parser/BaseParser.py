@@ -1,8 +1,9 @@
+from models import Label, MetaData
+import re
+
 from .Parser import Parser
 from .ContextParser import ContextParser
 from .ParseException import ParseException
-from models import Label
-import re
 
 regex_label = re.compile(r"label\s+(?P<label>[A-Za-z0-9_\-]+)\s*:")
 
@@ -14,22 +15,22 @@ class BaseParser(Parser):
         self.label = None
         self.child = None
 
-    def parse_line(self, indent, line_number, line, filepath):
+    def parse_line(self, metadata):
         if self.child:
-            self.child.parse_line(indent, line_number, line, filepath)
+            self.child.parse_line(metadata)
             # if child still active
             if self.child:
                 return
 
         # ignore if not aligned to 0
-        if indent != 0:
+        if metadata.indent != 0:
             return
         
-        match = regex_label.match(line)
+        match = regex_label.match(metadata.line)
         if match:
             label = match["label"]
-            self.child = ContextParser(self, filepath=filepath, line_number=line_number)
-            self.label = Label(label, filepath=filepath, line_number=line_number)
+            self.child = ContextParser(self, metadata)
+            self.label = Label(label, metadata)
     
     def close(self):
         if self.child:

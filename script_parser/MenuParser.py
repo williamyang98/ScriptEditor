@@ -7,48 +7,48 @@ regex_description = re.compile(r"\"(?P<description>.+)\"")
 regex_choice = re.compile(r"(?P<choice>.+):")
 
 class MenuParser(Parser):
-    def __init__(self, parent, filepath, line_number):
+    def __init__(self, parent, metadata):
         self.parent = parent
-        self._model = Menu(filepath=filepath, line_number=line_number)
+        self._model = Menu(metadata)
         self.indent = None
 
         self.child = None
         self.choice = None
 
-    def parse_line(self, indent, line_number, line, filepath):
+    def parse_line(self, metadata):
         if self.indent is None:
-            self.indent = indent
+            self.indent = metadata.indent
 
         if self.child:
-            self.child.parse_line(indent, line_number, line, filepath)
+            self.child.parse_line(metadata)
             if self.child:
                 return
         
-        if indent < self.indent:
+        if metadata.indent < self.indent:
             self.close()
             return
 
-        self.parse_choice(indent, line_number, line, filepath) or \
-        self.parse_description(indent, line_number, line, filepath)
+        self.parse_choice(metadata) or \
+        self.parse_description(metadata)
         
             
-    def parse_description(self, indent, line_number, line, filepath):
-        match = regex_description.match(line)
+    def parse_description(self, metadata):
+        match = regex_description.match(metadata.line)
         if match:
             description = match["description"]
             self._model.description = description
             return True
         return False
 
-    def parse_choice(self, indent, line_number, line, filepath):
+    def parse_choice(self, metadata):
         from .ContextParser import ContextParser
-        match = regex_choice.match(line)
+        match = regex_choice.match(metadata.line)
         if match:
             description = match["choice"]
-            choice = Choice(description, filepath=filepath, line_number=line_number)
+            choice = Choice(description, metadata)
             self.choice = choice
             self._model.add_choice(choice)
-            self.child = ContextParser(self, filepath=filepath, line_number=line_number)
+            self.child = ContextParser(self, metadata)
             return True
         return False
     
