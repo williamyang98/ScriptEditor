@@ -42,10 +42,10 @@ Files can also be inspected in the node editor from the file explorer as well. T
 ![alt text](docs/1.1.1/window.png "Application Window")
 
 #### Outline panel
-![alt text](docs/1.1.0/outline.png "Outline Panel")
+![alt text](docs/1.1.1/outline.png "Outline Panel")
 
 #### File explorer
-![alt text](docs/1.1.0/file_explorer.png "File Explorer")
+![alt text](docs/1.1.1/file_explorer.png "File Explorer")
 
 #### File tabs
 ![alt text](docs/1.1.1/tabs.png "File tabs")
