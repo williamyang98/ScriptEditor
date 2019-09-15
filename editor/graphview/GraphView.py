@@ -5,12 +5,11 @@ from .NodeTracker import NodeTracker
 from views import NodeGraph, Renderer
 from editor.organisers import TreeOrganiser, GridOrganiser
 
-class GraphView(QtWidgets.QWidget):
+class GraphView(Camera):
     def __init__(self, editor, parent):
-        super().__init__(parent=parent)
+        self._scene = QtWidgets.QGraphicsScene()
+        super().__init__(scene=self._scene, parent=parent)
         self.editor = editor
-        self.scene = QtWidgets.QGraphicsScene(self)
-        self.camera = Camera(self.scene, self)
 
         self.organiser = TreeOrganiser()
         self.nodeGraph = NodeGraph()
@@ -19,11 +18,11 @@ class GraphView(QtWidgets.QWidget):
     def clear(self):
         self.nodeGraph = NodeGraph()
         self.nodeTracker = NodeTracker(self.nodeGraph)
-        self.scene.clear()
+        self._scene.clear()
     
     def open(self, labels=[]):
         self.clear()
-        renderer = Renderer(self.scene, self.editor)
+        renderer = Renderer(self._scene, self.editor)
         for label in labels:
             label.accept(renderer)
         self.nodeGraph = renderer.nodeGraph
@@ -44,4 +43,4 @@ class GraphView(QtWidgets.QWidget):
         self.focusPosition(pos)
 
     def focusPosition(self, position):
-        self.camera.centerOn(position)
+        self.centerOn(position)
