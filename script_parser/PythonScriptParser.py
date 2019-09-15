@@ -1,29 +1,30 @@
 from .Parser import Parser
-from models import PythonScript
+from models import PythonScript, Text
 
 class PythonScriptParser(Parser):
-    def __init__(self, parent):
+    def __init__(self, parent, metadata):
         self.parent = parent
-        self._model = PythonScript()
+        self.script = PythonScript(metadata)
         self.indent = None
 
-    def parse_line(self, indent, line_number, line):
+    def parse_metadata(self, metadata, stack):
         if self.indent is None:
-            self.indent = indent
+            self.indent = metadata.indent
         
-        if indent < self.indent:
-            self.close()
+        if metadata.indent < self.indent:
+            self.close(metadata, stack)
             return
         
-        self._model.add_line(line)
+        self.script.add_line(Text(metadata.line, metadata))
 
-    def close(self):
-        self.parent.on_child_close()
+    def close(self, metadata, stack):
+        stack.pop()
+        stack.parse_metadata(metadata)
     
-    def on_child_close(self):
+    def on_child_pop(self, child):
         pass
         
     @property
     def model(self):
-        return self._model
+        return self.script
         

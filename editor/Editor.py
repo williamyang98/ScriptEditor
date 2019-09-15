@@ -47,8 +47,10 @@ class Editor:
         graphView = self.fileTabs.getCurrentGraphScene()
         if graphView is None:
             return
+        
+        id = "label {0}".format(label)
 
-        view = graphView.getView("label {0}".format(label))
+        view = graphView.getView(id)
         if view is not None:
             self.findNode(view)
             return
@@ -56,10 +58,14 @@ class Editor:
         if not search:
             return
 
-        filepath = self.loader.getLabelFilepath(label)
-        if filepath is not None:
-            self.openFile(filepath)
+        filepaths = self.loader.getFilepaths(id)
+        if filepaths:
+            self.openFile(filepaths[0])
             self.findLabel(label, search=False)
+    
+    def findNodeById(self, id):
+        filepaths = self.loader.getFilepaths(id)
+        print(filepaths)
     
     def findNode(self, node):
         graphView = self.fileTabs.getCurrentGraphScene() 
@@ -69,4 +75,4 @@ class Editor:
         self.breadcrumb.focusView(node)
     
     def show(self):
-        self.horizontalSplitter.show()
+        self.horizontalSplitter.showMaximized()

@@ -1,50 +1,40 @@
+from models import Label, MetaData
+import re
+
 from .Parser import Parser
 from .ContextParser import ContextParser
 from .ParseException import ParseException
-from models import Label
-import re
 
 regex_label = re.compile(r"label\s+(?P<label>[A-Za-z0-9_\-]+)\s*:")
 
 class BaseParser(Parser):
     """Gets all labels and their contexts from lines
     """
-    def __init__(self):
-        self._labels = []
-        self.label = None
-        self.child = None
+    def __init__(self, stack):
+        self.labels = []
+        self.current_label = None
+        self.stack = stack
 
-    def parse_line(self, indent, line_number, line):
-        if self.child:
-            self.child.parse_line(indent, line_number, line)
-            # if child still active
-            if self.child:
-                return
-
+    def parse_metadata(self, metadata, stack):
         # ignore if not aligned to 0
-        if indent != 0:
+        if metadata.indent != 0:
             return
         
-        match = regex_label.match(line)
+        match = regex_label.match(metadata.line)
         if match:
             label = match["label"]
-            self.child = ContextParser(self)
-            self.label = Label(label)
+            self.current_label = Label(label, metadata)
+            parser = ContextParser(self, metadata)
+            stack.push(parser)
+            return
     
-    def close(self):
-        if self.child:
-            self.child.close()
-    
-    def on_child_close(self):
-        self._labels.append(self.label)
-        context = self.child.model
-        self.label.context = context
-        context.parent = self.label
-        self.child = None
-        self.label = None
+    def on_child_pop(self, child):
+        self.labels.append(self.current_label)
+        self.current_label.context = child.model
+        self.current_label = None
     
     @property
     def model(self):
-        return self._labels
+        return self.labels
         
 

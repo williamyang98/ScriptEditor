@@ -1,27 +1,21 @@
 import os
 import json
-from script_parser import parse_lines
+from script_parser import parse_file
 from models import JSONSerialiser
+
+from .NodeTracker import NodeTracker
 
 class LabelsLoader:
     def __init__(self):
-        self.labels = {}
-        self.label_filepaths = {}
-        self.explored_filepaths = {} 
+        self.nodeTracker = NodeTracker()
         self.serialiser = JSONSerialiser()
+
+        self.nodes = {}
+        self.node_filepaths = {}
+        self.explored_filepaths = {} 
     
-    def addLabel(self, label, filepath):
-        self.labels.setdefault(label.name, label)
-        self.label_filepaths.setdefault(label.name, filepath)
-        labels = self.explored_filepaths.setdefault(filepath, [])
-        if label not in labels: 
-            labels.append(label)
-    
-    def getLabel(self, name):
-        return self.labels.get(name)
-    
-    def getLabelFilepath(self, name):        
-        return self.label_filepaths.get(name)
+    def getFilepaths(self, id):        
+        return self.node_filepaths.get(id)
     
     def loadFromFilepath(self, filepath):
         if os.path.isdir(filepath):
@@ -41,21 +35,28 @@ class LabelsLoader:
         return labels
     
     def loadFromFile(self, filepath, force=False):
+        filepath = os.path.normpath(filepath)
         if filepath in self.explored_filepaths:
             return self.explored_filepaths.get(filepath)
 
-        try:
-            with open(filepath, "r", encoding="utf8") as fp:
-                labels = parse_lines(fp.readlines())
-        except:
-            labels = []
+        labels = parse_file(filepath)
 
         for label in labels:
-            self.addLabel(label, filepath)
+            self._trackNode(label, filepath)
 
+        self.explored_filepaths.setdefault(filepath, labels)
         return labels      
     
     def saveToFile(self, filepath):
         data = [label.accept(serialiser) for label in self.labels.values()]
         with open(filepath, "w", encoding="utf8") as fp:
             json.dump(data, fp, indent=2)
+    
+    def _trackNode(self, node, filepath):
+        id = node.accept(self.nodeTracker)
+        if id is not None:
+            self.nodes.setdefault(id, node)
+            filepaths = self.node_filepaths.setdefault(id, [])
+            filepaths.append(filepath)
+        for child in node.children:
+            self._trackNode(child, filepath)

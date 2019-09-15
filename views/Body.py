@@ -10,6 +10,9 @@ class Body(Node):
         self.min_width = 100
         self.x_padding = 10
         self.y_padding = 5
+        self.levelOfDetail = 0.6
+
+        self._calculatedRect = False
 
     
     @abstractproperty
@@ -28,10 +31,14 @@ class Body(Node):
 
         self.height = height
         self.width = width
+        self._calculatedRect = True
     
     def paint(self, painter, option, widget):
+        levelOfDetail = QtWidgets.QStyleOptionGraphicsItem.levelOfDetailFromTransform(painter.worldTransform())
         fontMetrics = painter.fontMetrics()
-        self.calculateRect(metric=fontMetrics)        
+
+        if not self._calculatedRect:
+            self.calculateRect(metric=fontMetrics)        
 
         super().paint(painter, option, widget)
 
@@ -42,10 +49,11 @@ class Body(Node):
         
         y = fontMetrics.height()+self.y_padding
         for text, key in self.entries:
-            painter.drawText(
-                QtCore.QRectF(self.x_padding, y, self.width, fontMetrics.height()),
-                QtCore.Qt.AlignLeft,
-                text)
+            if levelOfDetail >= self.levelOfDetail:
+                painter.drawText(
+                    QtCore.QRectF(self.x_padding, y, self.width, fontMetrics.height()),
+                    QtCore.Qt.AlignLeft,
+                    text)
             socket = self.getSocket(key)
             if socket:
                 self.alignSocketRight(socket)

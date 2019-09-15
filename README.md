@@ -32,7 +32,6 @@ Files can also be inspected in the node editor from the file explorer as well. T
 ### Bugs
 * Connections between nodes don't render unless camera is moved to the origin
 * Artifacting left behind when cubic connection is moved (Possible bounding rect issue)
-* Graph view under the tab isn't aligned properly so the (0, 0) is at the centre, but is instead offset to the right
   
 ### Requirements
 * Python 3.0 and above
@@ -40,13 +39,16 @@ Files can also be inspected in the node editor from the file explorer as well. T
 
 ### Gallery
 #### Application
-![alt text](docs/1.1.0/window.png "Application Window")
+![alt text](docs/1.1.1/window.png "Application Window")
 
 #### Outline panel
 ![alt text](docs/1.1.0/outline.png "Outline Panel")
 
 #### File explorer
 ![alt text](docs/1.1.0/file_explorer.png "File Explorer")
+
+#### File tabs
+![alt text](docs/1.1.1/tabs.png "File tabs")
 
 
 

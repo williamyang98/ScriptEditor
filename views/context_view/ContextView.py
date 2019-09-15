@@ -1,6 +1,10 @@
 from PySide2 import QtGui, QtCore, QtWidgets
-from .Body import Body
-from .Socket import Socket
+from views import Body
+from views import Socket
+
+from .ContextDescriptions import ContextDescription
+
+descriptor = ContextDescription()
 
 class ContextView(Body):
     def __init__(self, context, editor):
@@ -13,20 +17,20 @@ class ContextView(Body):
     def _createSockets(self):
         socket = Socket(self)
         self.addSocket("root", socket)
-        for content in self._context.contents:
-            if isinstance(content, str):
-                continue
-            socket = Socket(self)
-            self.addSocket(content, socket)
     
     def _createEntries(self):
         self._entries = []
-        for content in self._context.contents:
-            if isinstance(content, str):
-                self._entries.append((content, None))
-            else:
-                text = str(content)
-                self._entries.append((text, content))
+        for child in self._context.children:
+            data = child.accept(descriptor)
+            if data is None:
+                continue
+
+            if data.text:
+                self._entries.append((data.text, child))
+
+            if data.hasSocket: 
+                socket = Socket(self)
+                self.addSocket(child, socket)
     
     @property
     def entries(self):

@@ -8,92 +8,76 @@ regex_elif = re.compile(r"elif\s+(?P<condition>.*)\s*:")
 regex_else = re.compile(r"else\s*:")
 
 class ConditionParser(Parser):
-    def __init__(self, parent):
+    def __init__(self, parent, metadata):
         self.parent = parent
-        self._model = ConditionBlock()
+        self.block = ConditionBlock(metadata)
         self.indent = None
         self.condition = None
 
         self.condition_parser = self.parse_if
 
-        self.child = None
-    
-    def parse_line(self, indent, line_number, line):
+    def parse_metadata(self, metadata, stack):
+        from .ContextParser import ContextParser
         if self.indent is None:
-            self.indent = indent
+            self.indent = metadata.indent
         
-        if self.child:
-            self.child.parse_line(indent, line_number, line)
-            # if child not closed
-            if self.child:
-                return
-        
-        if self.condition_parser is None or indent < self.indent:
-            self.close()
+        if self.condition_parser is None or metadata.indent < self.indent:
+            self.close(metadata, stack)
             return
 
         # if unable to parse, then end conditional block
-        if not self.condition_parser(indent, line_number, line):
-            self.close()
-            return
-    
-    def close(self):
-        if self.child:
-            self.child.close()
-        self.parent.on_child_close()
+        if self.condition_parser(metadata, stack):
+            parser = ContextParser(self.block, metadata)
+            stack.push(parser)
+        else:
+            self.close(metadata, stack)
         
-    def on_child_close(self):
-        context = self.child.model
-        self.condition.context = context
-        context.parent = self.condition
-        self.condition = None
-        self.child = None
-
+    def on_child_pop(self, child):
+        self.condition.context = child.model
+    
+    def close(self, metadata, stack):
+        stack.pop()
+        stack.parse_metadata(metadata)
+        
     @property
     def model(self):
-        return self._model
+        return self.block
 
-    def parse_if(self, indent, line_number, line):
+    def parse_if(self, metadata, stack):
         from .ContextParser import ContextParser
-        match = regex_if.match(line)
+        match = regex_if.match(metadata.line)
         if match:
             condition = match["condition"]
-            self.child = ContextParser(self)
-            if_condition = IfCondition(condition)
+            if_condition = IfCondition(condition, metadata)
             self.condition = if_condition
-            self._model.if_condition = if_condition
-
+            self.block.if_condition = if_condition
             self.condition_parser = self.parse_elif_or_else
             return True
         return False
     
-    def parse_elif(self, indent, line_number, line):
+    def parse_elif(self, metadata, stack):
         from .ContextParser import ContextParser
-        match = regex_elif.match(line)
+        match = regex_elif.match(metadata.line)
         if match:
             condition = match["condition"]
-            self.child = ContextParser(self)
-            elif_condition = ElifCondition(condition)
+            elif_condition = ElifCondition(condition, metadata)
             self.condition = elif_condition
-            self._model.add_elif_condition(elif_condition)
-
+            self.block.add_elif_condition(elif_condition)
             self.condition_parser = self.parse_elif_or_else
             return True
         return False
     
-    def parse_else(self, indent, line_number, line):
+    def parse_else(self, metadata, stack):
         from .ContextParser import ContextParser
-        match = regex_else.match(line)
+        match = regex_else.match(metadata.line)
         if match:
-            self.child = ContextParser(self)
-            else_condition = ElseCondition()
+            else_condition = ElseCondition(metadata)
             self.condition = else_condition
-            self._model.else_condition = else_condition
-
+            self.block.else_condition = else_condition
             self.condition_parser = None
             return True
         return False
     
-    def parse_elif_or_else(self, indent, line_number, line):
-        return (self.parse_elif(indent, line_number, line) or \
-                self.parse_else(indent, line_number, line))
+    def parse_elif_or_else(self, metadata, stack):
+        return (self.parse_elif(metadata, stack) or \
+                self.parse_else(metadata, stack))

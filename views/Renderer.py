@@ -3,7 +3,7 @@ from PySide2 import QtCore
 from models import Visitor
 
 from .ConditionView import ConditionView
-from .ContextView import ContextView
+from .context_view import ContextView
 from .LabelView import LabelView
 from .MenuView import MenuView
 from .JumpView import JumpView
@@ -63,13 +63,11 @@ class Renderer(Visitor):
         self.scene.addItem(node)
         self.nodeGraph.addViewModel(node, context)
         with self.nodeGraph:
-            for content in context.contents:
-                if isinstance(content, str):
-                    continue
-                child = content.accept(self)
-                if child:
-                    start = node.getSocket(content)
-                    end = child.getSocket("root")
+            for child in context.children:
+                childNode = child.accept(self)
+                if childNode:
+                    start = node.getSocket(child)
+                    end = childNode.getSocket("root")
                     self.create_connection(start, end)
         
         return node
