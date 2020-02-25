@@ -23,11 +23,13 @@ Files can also be inspected in the node editor from the file explorer as well. T
 
 ### Roadmap
 * Show jump/call directives associated for each label to see what uses the label
-* Add breadcrumb for better navigation
+* Create a flexible search engine to navigate between scripts and within graphs
 * Add undo and redo when moving between nodes in files
 * Add split screen to view two files at once
 * Add support for Renpy screens
 * Integrate an editor so that the Renpy script can be created using a node graph
+* Add realtime synchronisation between a running Renpy script and a pointer within the node graph
+* Create a debug console for logging parsing errors and syntax warnings
 
 ### Bugs
 * Connections between nodes don't render unless camera is moved to the origin
