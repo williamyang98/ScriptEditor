@@ -1,3 +1,4 @@
+from fbs_runtime.application_context.PySide2 import ApplicationContext
 from PySide2 import QtGui, QtCore, QtWidgets
 from editor import Editor
 
@@ -5,9 +6,10 @@ import os
 import sys
 import argparse
 
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("dir")
+    parser.add_argument("--dir", default=".")
 
     args = parser.parse_args()
     if not os.path.isdir(args.dir):
@@ -15,12 +17,13 @@ def main():
         return 1
     
 
-    QtWidgets.QApplication.setStyle("fusion")
-    app = QtWidgets.QApplication([]) 
+    app_ctx = ApplicationContext()
+    app_ctx.app.setStyle("fusion")
+
     editor = Editor(args.dir)
     editor.show()
 
-    return app.exec_()
+    return app_ctx.app.exec_()
 
 
 if __name__ == '__main__':
