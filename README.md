@@ -3,6 +3,13 @@
 Instead of reading through a monolithic file that is interspersed with dialogue, conditionals, menus and inline python/Renpy scripts, 
 visualise your game as a colourful node graph. 
 
+### How to run
+Download zip from releases page and extract.
+
+Run <code>"./Renpy Script Parser.exe" --dir [your_directory]</code>.
+
+By default it will parse the directory it is located in. This means you can run "./Renpy Script Parser" while you are in your RenPy project directory.
+
 ### Description
 Each node is visually distinct from another node to represent a different building block of your Renpy script, and each connection indicates a flow
 of execution into another node. Conditional statements and menus will branch off into different nodes to represent a branch in your story.
